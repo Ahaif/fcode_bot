@@ -4,9 +4,13 @@ from __future__ import annotations
 
 from types import SimpleNamespace
 
-from fcode import Environment, Position
+from fcode import Direction, EntityType, Environment, Position
 
+from assignment import claim_ore, record_harvester
+from constants import PHASE_BUILD_CONVEYOR
 from economy import compute_conveyor_plan, plan_is_complete, replan_conveyor_suffix
+from geometry import facing_toward
+from roles import builder_role
 
 
 class _OpenMap:
@@ -76,3 +80,102 @@ def test_plan_is_complete_requires_all_conveyors() -> None:
     assert plan_is_complete(ct, state, core) is False  # type: ignore[arg-type]
     ct.conveyors = {(5, 1), (4, 1), (3, 1)}
     assert plan_is_complete(ct, state, core) is True  # type: ignore[arg-type]
+
+
+def test_corner_skip_face_target_picks_wrong_cardinal() -> None:
+    """Document why we must face plan[i+1], not plan[i+2], on corners."""
+    tile = Position(13, 17)
+    next_tile = Position(13, 18)
+    skip_tile = Position(12, 18)
+    assert facing_toward(tile, next_tile) == Direction.SOUTH
+    # Diagonal skip + cardinal tie-break → WEST (wrong for the belt).
+    assert facing_toward(tile, skip_tile) == Direction.WEST
+
+
+def test_pave_while_standing_on_next_faces_immediate_successor() -> None:
+    """Regression: paving stand from plan[1] must face plan[1], not plan[2].
+
+    On an L-shaped path, facing plan[2] aims diagonally and builds WEST
+    instead of SOUTH — ore never enters the belt (valkyrie).
+    """
+    stand = Position(13, 17)
+    ahead = Position(13, 18)
+    turn = Position(12, 18)
+    plan = [stand, ahead, turn, Position(11, 18), Position(10, 18)]
+    state = SimpleNamespace(
+        phase=PHASE_BUILD_CONVEYOR,
+        core_pos=Position(1, 1),
+        assignment=None,
+        explore_target=None,
+        approach_stand=stand,
+        build_plan=plan,
+        build_index=0,
+        replan_count=0,
+        last_replan_reason=None,
+        stand_paved=False,
+        stuck=0,
+        harvests_done=1,
+    )
+    claim_ore(state, Position(13, 16))
+    record_harvester(state, Position(13, 16))
+
+    class FakeCt:
+        def __init__(self) -> None:
+            self.built: list[tuple[Position, Direction]] = []
+            self.conveyors = {(ahead.x, ahead.y)}
+            self.ore = Position(13, 16)
+
+        def get_position(self) -> Position:
+            return ahead  # standing on next plan tile
+
+        def is_in_vision(self, _p: Position) -> bool:
+            return True
+
+        def get_action_cooldown(self) -> int:
+            return 0
+
+        def get_global_resources(self) -> int:
+            return 9999
+
+        def get_conveyor_cost(self) -> int:
+            return 3
+
+        def get_map_width(self) -> int:
+            return 32
+
+        def get_map_height(self) -> int:
+            return 32
+
+        def get_tile_env(self, _p: Position):
+            return Environment.EMPTY
+
+        def get_tile_building_id(self, p: Position):
+            if (p.x, p.y) == (self.ore.x, self.ore.y):
+                return 7
+            return 1 if (p.x, p.y) in self.conveyors else None
+
+        def get_entity_type(self, uid: int = 0):
+            if uid == 7:
+                return EntityType.HARVESTER
+            return EntityType.CONVEYOR
+
+        def get_team(self, _uid: int | None = None):
+            return 0
+
+        def get_tile_builder_bot_id(self, _p: Position):
+            return None
+
+        def can_build_conveyor(self, _p: Position, _d: Direction) -> bool:
+            return True
+
+        def build_conveyor(self, p: Position, d: Direction) -> int:
+            self.built.append((p, d))
+            self.conveyors.add((p.x, p.y))
+            return 99
+
+        def get_move_cooldown(self) -> int:
+            return 1
+
+    ct = FakeCt()
+    builder_role._state_build_conveyor(ct, state, avoid=None)  # type: ignore[arg-type]
+    assert ct.built == [(stand, Direction.SOUTH)]

@@ -1,0 +1,93 @@
+---
+description: Florent Code League bot — project context, architecture, and core conventions
+alwaysApply: true
+---
+
+# Florent Bot — Project Context
+
+## Product
+An autonomous competitive bot for the Florent Code League: two teams of
+robots battle on a grid to mine titanium and destroy the enemy core. Win
+by better tiebreakers at round 1000 (titanium delivered to core →
+harvesters alive → titanium stored) or by destroying the enemy Core
+outright. Every feature exists to serve one of those two paths — harvest
+economy or combat — nothing else.
+
+## Architecture
+- Language: Python only. Entry point: top-level `class Player` with
+  `run(self, ct: Controller) -> None` in `main.py`.
+- Engine: `run()` is called once per round for every living unit. 10ms CPU
+  budget per unit per round. Any uncaught exception besides the engine's
+  own timeout permanently destroys that unit for the rest of the match.
+- No shared game object — all state is read through the unit-scoped
+  `Controller` (`ct`) passed into `run()`. Cross-unit/cross-round state
+  only survives via the 16-int comm store (per team, one-round write lag)
+  or module-level Python state (verify this persists across rounds in
+  this engine's process model before relying on it for anything
+  correctness-critical).
+
+## 5 Pieces (Never Break These Boundaries)
+1. `main.py` — entry point only: dispatch by `ct.get_entity_type()`, call
+   into the pieces below. No decision logic lives here.
+2. `economy.py` — harvesting: explore, claim ore, build conveyor +
+   harvester. Called from `builder_role.py`, not a role itself.
+3. `threat.py` — `is_core_threatened(ct) -> bool`, recomputed fresh every
+   round, no latched state.
+4. `roles/` — one file per `EntityType` (`core_role.py`,
+   `builder_role.py`, `gunner_role.py`). Only files under `roles/` may
+   call mutating `ct.*` methods (`move`, `build_*`, `fire`, `heal`,
+   `destroy`, `rotate`, `launch`, `spawn_builder`, `convert_ammo`,
+   `write_store`, `self_destruct`, `resign`).
+5. `strategy.py` — economy-sufficient check, attack trigger, finish-core
+   commit state with an explicit exit condition.
+
+Roles read from `economy.py`/`threat.py`/`strategy.py`; those modules never
+call into `roles/`. Keep the dependency direction one-way.
+
+## Shared Conventions
+- Costs: always `ct.get_<entity>_cost()`, never a hardcoded base cost —
+  cost scales with what's already been built.
+- Positions: `Position(x, y)`, cardinal-only builder movement via
+  `pos.cardinal_direction_to(target)`, never `pos.direction_to(target)`.
+- Build/attack/heal/destroy targets: orthogonally adjacent tile only, not
+  diagonal, not the unit's own tile.
+- Every mutating call is `can_*()`-gated first — the engine raises
+  `GameError` rather than no-opping.
+- Every `run()` / role `execute()` wrapped in try/except so nothing but
+  the engine's own timeout can escape.
+
+
+## Testing & Benchmarking Loop
+Every phase closes with a benchmark run, not just passing unit tests.
+1. Run the fast test suite first (`pytest tests/ -q`) — 0 failures before
+   anything else.
+2. Run the benchmark suite (or the agreed fast subset for a given phase —
+   named per-phase in `docs/PROGRESS_TRACKER.md`) and record the actual
+   numbers: titanium mined, maps mining 0, GameError count, win rate vs.
+   the starter bot where relevant.
+3. Compare against the previous checkpoint's recorded numbers in
+   `docs/PROGRESS_TRACKER.md` — a phase is only checkpointed if it matches
+   or improves on the prior baseline. A regression means bisect which
+   change caused it before moving on; don't guess.
+4. Record results directly as plain text in `docs/PROGRESS_TRACKER.md`'s
+   existing fields. One markdown file, filled in by hand after a human (me) has
+   watched the relevant replay and confirmed it.
+5. Checkboxes in `docs/PROGRESS_TRACKER.md` only get checked after I
+   explicitly confirm a replay — never check a box based on test/benchmark
+   output alone, since a passing benchmark doesn't guarantee correct
+   in-game behavior (e.g. it can still mine 0 while "tests pass").
+
+## Session Hygiene
+- Start of session: state which phase and checkpoint we're resuming from,
+  per `docs/PROGRESS_TRACKER.md`.
+- End of session: update the tracker's checkboxes (only the ones I've
+  confirmed) and fill in every blank field touched (thresholds, radii,
+  benchmark numbers).
+- If a phase fails its gate and gets reverted, log what was tried and why
+  it didn't pass — don't silently discard it or re-attempt the same
+  approach later without noting it failed once already.
+
+Read `docs/ARCHITECTURE.md` for the full layer-by-layer spec.
+Read `docs/PROGRESS_TRACKER.md` for current phase and checkpoint status.
+Read `docs/CONTROLLER_API.md` for the Controller API reference — don't
+Read `docs/MAP.md` for the Map knowledge

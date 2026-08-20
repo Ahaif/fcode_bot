@@ -33,6 +33,30 @@ n/a (use collected column)
 
 vs starter (duel seed 1): economy alive, combat still weak.
 
+Architecture note:
+Planner deferred indefinitely (decentralized claim assignment already
+covers it); Navigator promoted to a permanent architecture layer. See
+"Architecture Layer Status" below.
+
+---
+
+# Architecture Layer Status
+
+Maps the current code onto the layers in `docs/ARCHITECTURE.md`, so the
+question "which layer owns this / is this layer built" has one answer
+instead of being implicit across the phase checklists below. Full
+narrative version: `docs/OVERVIEW.md`.
+
+| Layer | Target doc | Status | Where it actually lives |
+|---|---|---|---|
+| World State | `docs/WORLDSTATE.md` | Not a real object | Every role calls `ct.*` directly (`roles/*.py`, `economy.py`, `explore.py`, `defense.py`, `combat.py`). Fine at this scale; revisit only if reading logic starts duplicating across roles. |
+| Map Knowledge | `docs/02_MAP.md` | Partial | Ore ownership/claims: `claim_manager.py` (comm-store slots 6–15). Enemy Core memory: `combat.note_enemy_core` / `enemy_core_target` (comm-store slot). No unified `MapKnowledge` object yet — this is Phase 3. |
+| Mission | `docs/03_MISSION.md` | Not started | No mission list exists; the phase machine in `roles/builder_role.py` picks its own targets per phase instead of reading a team mission. |
+| Assignment (was "Planner") | `docs/04_PLANNER.md` | **Done — decentralized, no separate layer built** | `claim_manager.py` + `assignment.py` implement Option B from `04_PLANNER.md`: every builder recomputes the same deterministic ore claim locally, ties broken by (hunger, distance, id). Proven on the full benchmark suite. **Decision: no `planner.py`.** A centralized Planner would duplicate this for more complexity and no measured benefit — revisit only if a real need appears that per-ore claim ownership can't express (e.g. arbitrating mine-vs-defend under unit scarcity). |
+| Roles | `docs/05_ROLES.md` | Done | `roles/core_role.py`, `roles/builder_role.py`, `roles/gunner_role.py`. Missing `sentinel_role.py`/`launcher_role.py` (not needed yet — no sentinels/launchers built). |
+| Navigator | `docs/ARCHITECTURE.md` Layer 3.5 (new — added Phase 2.5, not in the original 6-layer doc set) | **Done, integrated** | `navigator.py`. All movement for every role routes through `navigator.step_to` (explore / approach / belt / defend / attack). |
+| Policy | `docs/06_POLICY.md` | Not started | `DEFEND`/`ATTACK` today is a static odd/even unit-id split made once per builder, not a reactive team-wide mode. This is Phase 6. |
+
 ---
 
 # Phase 1 — Stable Economy (Highest Priority)
@@ -114,6 +138,10 @@ Verification
 
 # Phase 2.5 — Navigator
 
+Status: complete, and promoted from "phase" to permanent architecture
+layer — see `docs/ARCHITECTURE.md` Layer 3.5 and "Architecture Layer
+Status" above. Kept as a phase entry here only for benchmark history.
+
 Goal:
 Shared movement layer. Roles choose WHERE; Navigator chooses HOW.
 
@@ -128,53 +156,22 @@ Checklist
 
 Verification
 
-- [ ] Replay maps containing walls — harvester owner finds a route home if one exists
+- [x] Replay maps containing walls — harvester owner finds a route home if one exists
 - [x] Benchmark equal or better vs prior version (8263 ≥ 8221, 0/21 zero-mining)
 
 ---
 
-# Phase 3 — Defense
+# Phase 3 — Map Intelligence (→ Map Knowledge layer)
 
-Goal:
-Protect the economy.
+Moved ahead of Defense/Offense: turret placement (Phase 4) and attack
+targeting (Phase 5) both want real map memory — enemy Core position, known
+choke points, discovered ore — rather than reasoning about the map from
+scratch each time. Build the `Map` layer once here, reuse it in both.
 
-Checklist
-
-- [ ] Detect enemy pressure
-- [ ] Turrets face enemy approach
-- [ ] Never build turrets toward map edge
-- [ ] Protect harvesters
-- [ ] Protect conveyors
-- [ ] Repair damaged structures
-
-Verification
-
-- [ ] Economy survives attacks
-- [ ] Win rate increases
-
----
-
-# Phase 4 — Offense
-
-Goal:
-Damage enemy economy.
-
-Checklist
-
-- [ ] Find enemy harvesters
-- [ ] Destroy harvesters
-- [ ] Destroy conveyors
-- [ ] Attack Core when economy is secured
-- [ ] Retreat when losing
-
-Verification
-
-- [ ] Enemy mining decreases
-- [ ] Win rate increases
-
----
-
-# Phase 5 — Map Intelligence
+This is where the unified `MapKnowledge` object from `docs/02_MAP.md` gets
+built, replacing the comm-store-only pieces (`claim_manager.py` ore
+claims, `combat.note_enemy_core`) with a real cumulative object. See
+"Architecture Layer Status" above for current partial state.
 
 Goal:
 Use map knowledge for better decisions.
@@ -194,7 +191,55 @@ Verification
 
 ---
 
-# Phase 6 — Strategic Decisions
+# Phase 4 — Defense
+
+Goal:
+Protect the economy, using Phase 3's map knowledge (known choke points,
+discovered enemy structures) to place turrets and detect pressure.
+
+Checklist
+
+- [ ] Detect enemy pressure
+- [ ] Turrets face enemy approach
+- [ ] Never build turrets toward map edge
+- [ ] Protect harvesters
+- [ ] Protect conveyors
+- [ ] Repair damaged structures
+
+Verification
+
+- [ ] Economy survives attacks
+- [ ] Win rate increases
+
+---
+
+# Phase 5 — Offense
+
+Goal:
+Damage enemy economy, using Phase 3's enemy Core estimate/choke points to
+target and route attacks instead of guessing.
+
+Checklist
+
+- [ ] Find enemy harvesters
+- [ ] Destroy harvesters
+- [ ] Destroy conveyors
+- [ ] Attack Core when economy is secured
+- [ ] Retreat when losing
+
+Verification
+
+- [ ] Enemy mining decreases
+- [ ] Win rate increases
+
+---
+
+# Phase 6 — Strategic Decisions (→ Policy layer)
+
+This is where `docs/06_POLICY.md`'s reactive `BOOTSTRAP`/`ECONOMY`/
+`DEFEND`/`ATTACK` mode switch replaces today's static odd/even unit-id
+split. Not an Assignment/Planner concern — Policy only decides the mode;
+`claim_manager.py` keeps handling per-builder assignment underneath it.
 
 Goal:
 Make better long-term decisions.

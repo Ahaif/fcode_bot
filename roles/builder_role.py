@@ -590,21 +590,12 @@ def _state_build_conveyor(
         idx = min(adj_incomplete)
         state.build_index = idx  # type: ignore[attr-defined]
         tile = plan[idx]
+        # Always face the immediate next plan tile — even if we stand on it.
+        # Skipping to plan[idx+2] aims at a diagonal on corners; cardinal
+        # tie-break then picks the wrong axis (WEST instead of SOUTH), and
+        # ore never follows the belt (valkyrie stand/corner pave).
         nxt = plan[idx + 1] if idx + 1 < len(plan) else nearest_core_tile(tile, core)
-        # Face along the belt, not at our own feet (common when paving stand
-        # from plan[1] after build-ahead).
-        if xy(nxt) == xy(pos):
-            nxt = (
-                plan[idx + 2]
-                if idx + 2 < len(plan)
-                else nearest_core_tile(tile, core)
-            )
         result = try_build_plan_tile(ct, tile, nxt, core)
-        if result == "can_build_false":
-            # Facing along-plan failed; try Core-facing as a last local attempt.
-            result = try_build_plan_tile(
-                ct, tile, nearest_core_tile(tile, core), core
-            )
         _audit_fsm(ct, state, event="build_plan_tile", reason=result, chosen=tile)
         if result == "built" and idx == 0:
             state.stand_paved = True  # type: ignore[attr-defined]

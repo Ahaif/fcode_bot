@@ -1,5 +1,14 @@
 # Layer: Planner
 
+> **Decision (see `docs/ARCHITECTURE.md`, Layer 4): superseded.** Option B
+> below was chosen and is already implemented as `claim_manager.py` +
+> `assignment.py` — a decentralized, comm-store-backed ore-ownership
+> protocol, not a separate `planner.py`. It's proven on the full benchmark
+> suite. This doc is kept for the reasoning trail (why B over A) and as
+> the reference if a real need for centralized multi-mission arbitration
+> ever appears — do not build a `planner.py` module without that need
+> being concrete and evidenced first.
+
 ## Responsibility
 
 Turn the active `Mission` list into a concrete `Task` per unit. This is the

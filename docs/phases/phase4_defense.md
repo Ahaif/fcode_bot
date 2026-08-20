@@ -1,7 +1,10 @@
-# Phase 3 — Defense
+# Phase 4 — Defense
 
-**Checklist lives in:** [`PROGRESS_TRACKER.md`](../../PROGRESS_TRACKER.md#phase-3--defense)
+**Checklist lives in:** [`PROGRESS_TRACKER.md`](../../PROGRESS_TRACKER.md#phase-4--defense)
 (this file does not duplicate the checkboxes — update them there, not here).
+
+Runs after Phase 3 (Map Intelligence) — enemy-pressure detection and turret
+placement both benefit from knowing the map before reacting to it.
 
 ## Goal
 Protect the economy: detect enemy pressure, place/orient turrets correctly,
@@ -28,7 +31,7 @@ protect harvesters and conveyors, repair damage.
 - `constants.py` — `MAX_GUNNERS`, `DEFENSE_RING_SQ`, `TITANIUM_RESERVE`.
 
 ## Verification
-Confirm the economy survives attacks and win rate increases vs. the Phase 2
-baseline. Use the Replay Review Checklist's "Defense" section in
-`PROGRESS_TRACKER.md` — were turrets useful, did they face enemies, was
-titanium wasted on bad placements.
+Confirm the economy survives attacks and win rate increases vs. the Phase 3
+(Map Intelligence) baseline. Use the Replay Review Checklist's "Defense"
+section in `PROGRESS_TRACKER.md` — were turrets useful, did they face
+enemies, was titanium wasted on bad placements.

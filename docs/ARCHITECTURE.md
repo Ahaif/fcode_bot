@@ -27,15 +27,27 @@
                            │
                            ▼
 +------------------------------------------------------+
-|                   PLANNER                            |
-| Which builder performs which mission?               |
+|            ASSIGNMENT  (not a "Planner" layer)       |
+| Which builder owns which ore/task?                  |
+| Decentralized: claim_manager.py + assignment.py —   |
+| every builder recomputes the same deterministic     |
+| claim locally. No planner.py. See decision below.   |
 +------------------------------------------------------+
                            │
                            ▼
 +------------------------------------------------------+
 |                     ROLES                            |
 | Core / Builder / Gunner / Sentinel / Launcher       |
-| Executes exactly ONE action per turn                |
+| Decides WHAT to do and WHERE. Executes exactly ONE  |
+| action per turn. Delegates movement to Navigator.   |
++------------------------------------------------------+
+                           │
+                           ▼
++------------------------------------------------------+
+|                   NAVIGATOR                          |
+| HOW to move, never WHERE/WHY.                       |
+| navigator.step_to() — Bug2 wall-follow, belt-safe   |
+| adjacency, no A*/BFS. Roles never compute movement. |
 +------------------------------------------------------+
                            ▲
                            │
@@ -59,6 +71,13 @@
                            │
                      Controller API
 ```
+
+> Note on this diagram vs. the current code: Navigator and Assignment
+> (`claim_manager.py`/`assignment.py`) are real and benchmarked today.
+> Policy, Missions, Map Knowledge (as a unified object), and World State
+> (as a real object) are not built yet — see "Architecture Layer Status"
+> in `PROGRESS_TRACKER.md` for the current per-layer state, and
+> `docs/OVERVIEW.md` for the file-by-file mapping.
 
 ---
 
@@ -157,40 +176,89 @@ Sentinel
 
 Launcher
 
-A Builder knows HOW to
-
-- move
-- build harvester
-- build conveyor
-- attack
-
-It never decides WHEN.
+A Builder knows WHAT to do and WHERE (build harvester, build conveyor,
+attack, or move toward a target). It never decides WHEN — that's Mission —
+and it never computes HOW to physically get there — that's Navigator.
 
 ---
 
-# Layer 4 — Planner
+# Layer 3.5 — Navigator
 
 Purpose
 
-Convert missions into assignments.
+Shared movement layer. Roles decide WHERE (a target tile); Navigator
+decides HOW to get there this round.
 
-Example
+Why it's a separate layer, not part of Roles: every role that moves
+(builder economy, explore, defend, attack) was independently reimplementing
+"step toward a target, handle a wall, avoid oscillating" — the same bug
+(wall-follow, A↔B flapping, belt side-stepping) kept getting fixed in one
+role and re-appearing in another. `navigator.py` centralizes it once.
+
+```python
+def step_to(ct: Controller, state, target: Position, *, avoid=None) -> bool:
+    """Take at most one step toward target this round. Returns True if
+    the unit acted (moved). Owns a small per-unit state machine
+    (NORMAL / WALL_FOLLOW, Bug2) — Roles never touch movement internals."""
+```
+
+No A*, no BFS — deliberately. Bug2 wall-follow (hug an obstacle until a
+line back to the target is clear) is the entire pathing algorithm. This
+was proven sufficient across the full benchmark map suite (Phase 2.5);
+don't add real pathfinding without evidence Bug2 is actually the
+bottleneck.
+
+What does NOT belong here
+
+- Choosing *which* tile to move toward (Roles'/Mission's job).
+- Any strategy — Navigator has no notion of ore, enemies, or Core, only
+  "get from A to B without getting stuck."
+
+Status: built and integrated — see `navigator.py` and Phase 2.5 in
+`PROGRESS_TRACKER.md`. Every role's movement goes through this layer.
+
+---
+
+# Layer 4 — Assignment (decision: no separate Planner layer)
+
+Purpose
+
+Decide which builder performs which unit of work (which ore, which task).
+
+Decision made: **do not build a centralized `planner.py`.** `04_PLANNER.md`
+laid out two designs — (A) a central computer publishing via the comm
+store, or (B) every unit recomputing the same deterministic assignment
+locally. Option B is already implemented as `claim_manager.py` +
+`assignment.py`: builders claim ore through a comm-store-backed ownership
+table, ties broken by a pure function of (hunger, distance, id) so every
+observer agrees without needing a dedicated planning pass. It's proven on
+the full benchmark suite.
+
+Adding a `planner.py` on top would duplicate this for more moving parts
+and no measured benefit — the exact "bad optimization" the Design
+Principles section below warns against ("More planners... without proving
+the lower layer works first"). Revisit only if a concrete need appears
+that per-ore claim ownership can't express — e.g. arbitrating builders
+between mining and defending under unit scarcity (that's closer to
+Mission/Policy's job than a generic Planner's).
+
+Example (as implemented today, via claim ownership, not a Planner object)
 
 Mission
 
 Expand to Ore A
 
-Planner
+Assignment (claim_manager)
 
-Builder 4 → Ore A
+Builder 4 claims Ore A
 
-Builder 7 → Ore B
+Builder 7 claims Ore B
 
-Builder 2 → Return Belt
+Builder 2 owns the return belt for its own harvester
 
 Output
 
-Tasks
+Each builder's own `Assignment` (ore_pos / harvester_pos / connected)
 
 Never call Controller directly.
 
@@ -280,7 +348,7 @@ Economy
 
 Phase 4
 
-Planner
+Assignment (claim-based, no planner.py — see Layer 4 decision above)
 
 ↓
 
@@ -437,7 +505,8 @@ Bad optimizations
 
 ✗ More modes
 
-✗ More planners
+✗ More planners (see Layer 4 decision above — claim-based assignment
+  already covers this)
 
 without proving the lower layer works first.
 

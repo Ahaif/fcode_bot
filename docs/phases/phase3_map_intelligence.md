@@ -1,7 +1,12 @@
-# Phase 5 — Map Intelligence
+# Phase 3 — Map Intelligence
 
-**Checklist lives in:** [`PROGRESS_TRACKER.md`](../../PROGRESS_TRACKER.md#phase-5--map-intelligence)
+**Checklist lives in:** [`PROGRESS_TRACKER.md`](../../PROGRESS_TRACKER.md#phase-3--map-intelligence)
 (this file does not duplicate the checkboxes — update them there, not here).
+
+Moved ahead of Defense/Offense: turret placement (Phase 4) and attack
+targeting (Phase 5) both want real map memory — enemy Core position, known
+choke points, discovered ore — rather than the comm-store-only pieces that
+exist today. Build the `Map` layer once, reuse it in both.
 
 ## Goal
 Use accumulated map knowledge (ore, walls, enemy buildings, enemy Core
@@ -35,4 +40,4 @@ replay) — everything else in this phase depends on that answer.
 
 ## Verification
 Better mining on difficult maps (partial-visibility maps, maps where enemy
-Core isn't visible early) vs. the Phase 4 baseline.
+Core isn't visible early) vs. the Phase 2 (Economy Optimization) baseline.

@@ -1,6 +1,6 @@
-# Phase 4 — Offense
+# Phase 5 — Offense
 
-**Checklist lives in:** [`PROGRESS_TRACKER.md`](../../PROGRESS_TRACKER.md#phase-4--offense)
+**Checklist lives in:** [`PROGRESS_TRACKER.md`](../../PROGRESS_TRACKER.md#phase-5--offense)
 (this file does not duplicate the checkboxes — update them there, not here).
 
 ## Goal
@@ -30,5 +30,5 @@ need per-unit HP awareness plus a team-wide signal (comm store or future
 `Policy`) about whether the team is winning or losing.
 
 ## Verification
-Confirm enemy mining decreases and win rate increases vs. the Phase 3
-baseline before moving to Phase 5.
+Confirm enemy mining decreases and win rate increases vs. the Phase 4
+(Defense) baseline before moving to Phase 6.
