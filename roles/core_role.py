@@ -11,14 +11,13 @@ from fcode import Controller, GameConstants
 from constants import (
     AMMO_CONVERT_CHUNK,
     MAX_BUILDERS,
-    SLOT_CORE_X,
-    SLOT_CORE_Y,
-    SLOT_GUNNER_COUNT,
     SPAWN_DIRS,
     TITANIUM_RESERVE,
 )
 from geometry import in_bounds
 import idle_investigate
+import map_knowledge
+from team_store import read_gunner_count, write_own_core
 
 
 def try_spawn_builder(ct: Controller) -> bool:
@@ -57,7 +56,7 @@ def maybe_convert_ammo(ct: Controller) -> None:
     if not callable(can_fn) or not callable(do_fn):
         return
 
-    guns = ct.read_store(SLOT_GUNNER_COUNT)
+    guns = read_gunner_count(ct)
     if guns <= 0 and ct.get_current_round() < 80:
         # Early game: keep Ti for builders / belts / harvesters.
         return
@@ -76,8 +75,8 @@ def maybe_convert_ammo(ct: Controller) -> None:
 def run_core(ct: Controller, state: object) -> None:
     """One Core turn: broadcast position, feed ammo, spawn up to MAX_BUILDERS."""
     pos = ct.get_position()
-    ct.write_store(SLOT_CORE_X, pos.x)
-    ct.write_store(SLOT_CORE_Y, pos.y)
+    write_own_core(ct, pos)
+    map_knowledge.update(ct)
 
     idle_investigate.log_scheduler_summary(ct, state)
 

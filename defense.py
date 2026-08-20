@@ -12,11 +12,11 @@ from constants import (
     CARDINALS,
     DEFENSE_RING_SQ,
     MAX_GUNNERS,
-    SLOT_GUNNER_COUNT,
     TITANIUM_RESERVE,
 )
 from geometry import builder_can_act, facing_away_from
 from navigator import step_to
+from team_store import bump_gunner_count, read_gunner_count
 
 
 def count_visible_friendly_gunners(ct: Controller) -> int:
@@ -32,7 +32,7 @@ def try_build_gunner(ct: Controller, core: Position) -> bool:
     """Build one outward-facing gunner on an orthogonal neighbour tile."""
     if not builder_can_act(ct):
         return False
-    if ct.read_store(SLOT_GUNNER_COUNT) >= MAX_GUNNERS:
+    if read_gunner_count(ct) >= MAX_GUNNERS:
         return False
     cost = ct.get_gunner_cost()
     if ct.get_global_resources() < cost + TITANIUM_RESERVE:
@@ -52,7 +52,7 @@ def try_build_gunner(ct: Controller, core: Position) -> bool:
     for tile in tiles:
         if ct.can_build_gunner(tile, facing):
             ct.build_gunner(tile, facing)
-            ct.write_store(SLOT_GUNNER_COUNT, ct.read_store(SLOT_GUNNER_COUNT) + 1)
+            bump_gunner_count(ct)
             return True
     return False
 

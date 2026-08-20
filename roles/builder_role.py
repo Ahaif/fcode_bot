@@ -30,8 +30,6 @@ from constants import (
     PHASE_MOVE_TO_STAND,
     PHASE_PLAN_CONVEYOR,
     PHASE_RETURN_HOME,
-    SLOT_CORE_X,
-    SLOT_CORE_Y,
     STUCK_LIMIT,
 )
 from defense import defend_step
@@ -49,6 +47,7 @@ from economy import (
 )
 from explore import init_sector, step_explore
 from geometry import (
+    builder_can_act,
     nearest_core_tile,
     on_or_orth_adjacent_to_core,
     orth_adjacent,
@@ -56,6 +55,8 @@ from geometry import (
 )
 import idle_investigate
 from navigator import step_to
+from team_store import read_own_core
+import map_knowledge
 
 _BUILDER_AUDIT = os.environ.get("BUILDER_AUDIT", "") == "1"
 _AUDIT_PATH = os.environ.get(
@@ -126,10 +127,7 @@ def _ensure_core_pos(ct: Controller, state: object) -> None:
             state.core_pos = ct.get_position(uid)  # type: ignore[attr-defined]
             return
     if ct.get_current_round() >= 2:
-        state.core_pos = Position(  # type: ignore[attr-defined]
-            ct.read_store(SLOT_CORE_X),
-            ct.read_store(SLOT_CORE_Y),
-        )
+        state.core_pos = read_own_core(ct)  # type: ignore[attr-defined]
 
 
 def _try_acquire_mining_task(
@@ -206,6 +204,7 @@ def run_builder(ct: Controller, state: object) -> None:
 
     _ensure_core_pos(ct, state)
     note_enemy_core(ct)
+    map_knowledge.update(ct)
     # Sole ownership reconcile + publish/clear for this unit.
     claim_manager.begin_turn(ct, state)
     init_sector(ct, state)
@@ -532,6 +531,39 @@ def _replan_or_fail(
         _fail_task(ct, state, reason=f"replan_failed_{reason}")
 
 
+def _clear_enemy_belt_on_plan(
+    ct: Controller,
+    state: object,
+    tile: Position,
+    *,
+    avoid: Position | None,
+) -> None:
+    """Smash enemy conveyor/splitter on a plan tile — do not replan around it.
+
+    On choke maps the only path home may run through enemy belts. Replanning
+    away often dumps the builder into a walled dead-end; clear then pave.
+    """
+    pos = ct.get_position()
+    if orth_adjacent(pos, tile):
+        if builder_can_act(ct) and ct.get_global_resources() >= 2 and ct.can_fire(tile):
+            ct.fire(tile)
+            _audit_fsm(ct, state, event="clear_enemy_belt", reason="attack", chosen=tile)
+            return
+        _audit_fsm(ct, state, event="clear_enemy_belt", reason="wait_attack", chosen=tile)
+        return
+
+    if xy(pos) == xy(tile):
+        # Standing on enemy belt — step off orthogonally so we can melee it.
+        core = getattr(state, "core_pos", None)
+        goal = nearest_core_tile(pos, core) if core is not None else pos
+        step_to(ct, state, goal, avoid=avoid)
+        _audit_fsm(ct, state, event="clear_enemy_belt", reason="step_off", chosen=tile)
+        return
+
+    step_to(ct, state, tile, avoid=avoid)
+    _audit_fsm(ct, state, event="clear_enemy_belt", reason="approach", chosen=tile)
+
+
 def _state_build_conveyor(
     ct: Controller, state: object, *, avoid: Position | None
 ) -> None:
@@ -579,12 +611,6 @@ def _state_build_conveyor(
             )
             if not later_conveyor:
                 adj_incomplete.append(i)
-        elif st in ("wall", "ore", "building", "oob"):
-            # Hard block on a planned tile — replan from here.
-            _replan_or_fail(
-                ct, state, core, from_index=i, reason=f"blocked:{st}", chosen=t
-            )
-            return
 
     if adj_incomplete:
         idx = min(adj_incomplete)
@@ -599,6 +625,18 @@ def _state_build_conveyor(
         _audit_fsm(ct, state, event="build_plan_tile", reason=result, chosen=tile)
         if result == "built" and idx == 0:
             state.stand_paved = True  # type: ignore[attr-defined]
+        if result == "blocked:enemy_belt":
+            _clear_enemy_belt_on_plan(ct, state, tile, avoid=avoid)
+            return
+        if result == "blocked:enemy_sink":
+            # Adjacent enemy belt is stealing the facing — smash it first.
+            if try_attack_adjacent(ct):
+                _audit_fsm(ct, state, event="clear_enemy_sink", chosen=tile)
+                return
+            _replan_or_fail(
+                ct, state, core, from_index=idx, reason=result, chosen=tile
+            )
+            return
         if result.startswith("blocked:"):
             _replan_or_fail(
                 ct, state, core, from_index=idx, reason=result, chosen=tile
@@ -614,6 +652,16 @@ def _state_build_conveyor(
 
     tile = plan[idx]
     status = plan_tile_status(ct, tile, core)
+
+    if status == "enemy_belt":
+        _clear_enemy_belt_on_plan(ct, state, tile, avoid=avoid)
+        return
+
+    if status in ("wall", "ore", "building", "oob"):
+        _replan_or_fail(
+            ct, state, core, from_index=idx, reason=f"blocked:{status}", chosen=tile
+        )
+        return
 
     # Standing on the incomplete tile — cannot pave underfoot; build ahead.
     if xy(pos) == xy(tile) and status in ("empty", "fog", "unit"):
@@ -631,6 +679,9 @@ def _state_build_conveyor(
 
         ahead = plan[idx + 1]
         ahead_st = plan_tile_status(ct, ahead, core)
+        if ahead_st == "enemy_belt":
+            _clear_enemy_belt_on_plan(ct, state, ahead, avoid=avoid)
+            return
         if ahead_st in ("wall", "ore", "building", "oob"):
             _replan_or_fail(
                 ct,
@@ -648,6 +699,17 @@ def _state_build_conveyor(
             face = plan[idx + 2] if idx + 2 < len(plan) else nearest_core_tile(ahead, core)
             result = try_build_plan_tile(ct, ahead, face, core)
             _audit_fsm(ct, state, event="build_ahead", reason=result, chosen=ahead)
+            if result == "blocked:enemy_belt":
+                _clear_enemy_belt_on_plan(ct, state, ahead, avoid=avoid)
+                return
+            if result == "blocked:enemy_sink":
+                if try_attack_adjacent(ct):
+                    _audit_fsm(ct, state, event="clear_enemy_sink", chosen=ahead)
+                    return
+                _replan_or_fail(
+                    ct, state, core, from_index=idx + 1, reason=result, chosen=ahead
+                )
+                return
             if result.startswith("blocked:"):
                 _replan_or_fail(
                     ct, state, core, from_index=idx + 1, reason=result, chosen=ahead

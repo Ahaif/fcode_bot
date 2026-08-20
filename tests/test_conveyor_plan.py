@@ -40,6 +40,40 @@ def test_plan_starts_at_stand_and_avoids_core_tiles() -> None:
         assert not (1 <= t.x <= 2 and 1 <= t.y <= 2)
 
 
+def test_axis_plan_rejects_fog_shortcut() -> None:
+    """Axis paths through fog must not be accepted (may hide walls)."""
+
+    class FogMap(_OpenMap):
+        def is_in_vision(self, p: Position) -> bool:
+            # Only stand + core approach visible; mid corridor is fog.
+            return p.x in (1, 2, 3, 8) or p.y != 1
+
+    stand = Position(8, 1)
+    core = Position(1, 1)
+    # Still finds a plan via fog-tolerant BFS, but not a foggy axis shortcut.
+    plan = compute_conveyor_plan(FogMap(), stand, core)  # type: ignore[arg-type]
+    assert plan is not None
+
+
+def test_closed_pocket_no_plan_when_walls_visible() -> None:
+    """Fully walled pocket with no exit → no conveyor plan (don't pave into wall)."""
+    walls = {
+        (4, 4), (5, 4), (6, 4),
+        (4, 5),         (6, 5),
+        (4, 6), (5, 6), (6, 6),
+    }
+    stand = Position(5, 5)  # inside
+    core = Position(1, 1)
+
+    class Pocket(_OpenMap):
+        def get_tile_env(self, p: Position):
+            if (p.x, p.y) in walls:
+                return Environment.WALL
+            return Environment.EMPTY
+
+    assert compute_conveyor_plan(Pocket(), stand, core) is None  # type: ignore[arg-type]
+
+
 def test_replan_preserves_prefix() -> None:
     stand = Position(6, 3)
     core = Position(1, 1)
@@ -73,6 +107,9 @@ def test_plan_is_complete_requires_all_conveyors() -> None:
 
             return EntityType.CONVEYOR
 
+        def get_team(self, _uid: int | None = None):
+            return 0
+
     core = Position(1, 1)  # footprint (1,1)-(2,2); (3,1) is adjacent
     plan = [Position(5, 1), Position(4, 1), Position(3, 1)]
     state = SimpleNamespace(build_plan=plan, build_index=0)
@@ -80,6 +117,130 @@ def test_plan_is_complete_requires_all_conveyors() -> None:
     assert plan_is_complete(ct, state, core) is False  # type: ignore[arg-type]
     ct.conveyors = {(5, 1), (4, 1), (3, 1)}
     assert plan_is_complete(ct, state, core) is True  # type: ignore[arg-type]
+
+
+def test_enemy_conveyor_does_not_complete_plan() -> None:
+    """Enemy belts must not count as our plan conveyors (ore gift bug)."""
+
+    class Ct(_OpenMap):
+        def __init__(self) -> None:
+            # All plan tiles have *enemy* conveyors.
+            self.conveyors = {(5, 1), (4, 1), (3, 1)}
+
+        def get_tile_building_id(self, p: Position):
+            return 1 if (p.x, p.y) in self.conveyors else None
+
+        def get_entity_type(self, _uid: int = 0):
+            return EntityType.CONVEYOR
+
+        def get_team(self, uid: int | None = None):
+            # uid None / omitted → us; building id 1 → enemy
+            if uid is None:
+                return 0
+            return 1
+
+    core = Position(1, 1)
+    plan = [Position(5, 1), Position(4, 1), Position(3, 1)]
+    state = SimpleNamespace(build_plan=plan, build_index=0)
+    assert plan_is_complete(Ct(), state, core) is False  # type: ignore[arg-type]
+
+
+def test_plan_routes_through_clearable_enemy_belt() -> None:
+    """Only-path choke through enemy belts must stay on that corridor.
+
+    Replanning around them dumps builders into walled dead-ends (crossfire).
+    """
+    enemy = {(5, 1), (4, 1), (3, 1), (2, 1)}  # sole row toward core
+
+    class Ct(_OpenMap):
+        def get_tile_building_id(self, p: Position):
+            return 9 if (p.x, p.y) in enemy else None
+
+        def get_entity_type(self, _uid: int = 0):
+            return EntityType.CONVEYOR
+
+        def get_team(self, uid: int | None = None):
+            if uid is None:
+                return 0
+            return 1
+
+    stand = Position(6, 1)
+    core = Position(1, 1)
+    plan = compute_conveyor_plan(Ct(), stand, core)  # type: ignore[arg-type]
+    assert plan is not None
+    # Direct corridor is shorter than going around — expect enemy tiles in plan.
+    assert any((t.x, t.y) in enemy for t in plan)
+
+
+def test_plan_tile_status_enemy_belt() -> None:
+    from economy import plan_tile_status
+
+    class Ct(_OpenMap):
+        def get_tile_building_id(self, p: Position):
+            return 9 if (p.x, p.y) == (4, 4) else None
+
+        def get_entity_type(self, _uid: int = 0):
+            return EntityType.CONVEYOR
+
+        def get_team(self, uid: int | None = None):
+            if uid is None:
+                return 0
+            return 1
+
+    assert plan_tile_status(Ct(), Position(4, 4), Position(1, 1)) == "enemy_belt"  # type: ignore[arg-type]
+
+
+def test_build_refuses_facing_into_enemy_belt() -> None:
+    from economy import try_build_plan_tile
+
+    class Ct(_OpenMap):
+        def __init__(self) -> None:
+            self.built: list[tuple[Position, Direction]] = []
+            self.pos = Position(5, 2)
+
+        def get_position(self) -> Position:
+            return self.pos
+
+        def get_action_cooldown(self) -> int:
+            return 0
+
+        def get_global_resources(self) -> int:
+            return 999
+
+        def get_conveyor_cost(self) -> int:
+            return 3
+
+        def get_tile_building_id(self, p: Position):
+            # Enemy conveyor north of the tile we want to pave.
+            if (p.x, p.y) == (5, 0):
+                return 9
+            return None
+
+        def get_entity_type(self, _uid: int = 0):
+            return EntityType.CONVEYOR
+
+        def get_team(self, uid: int | None = None):
+            if uid is None:
+                return 0
+            return 1
+
+        def get_tile_builder_bot_id(self, _p: Position):
+            return None
+
+        def can_build_conveyor(self, _p: Position, _d: Direction) -> bool:
+            return True
+
+        def build_conveyor(self, p: Position, d: Direction) -> int:
+            self.built.append((p, d))
+            return 1
+
+    # Preferred face target is north — into the enemy belt. Must pick another.
+    ct = Ct()
+    tile = Position(5, 1)
+    result = try_build_plan_tile(ct, tile, Position(5, 0), Position(1, 1))  # type: ignore[arg-type]
+    assert result == "built"
+    assert ct.built
+    assert ct.built[0][1] != Direction.NORTH
 
 
 def test_corner_skip_face_target_picks_wrong_cardinal() -> None:

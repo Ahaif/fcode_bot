@@ -70,8 +70,11 @@ def _in_vision(ct: Controller, pos: Position) -> bool | None:
 def passable_env(ct: Controller, pos: Position) -> bool:
     """True if a builder could stand here (ignoring other bots).
 
-    Fog-safe: unseen tiles are treated as passable (fog ≠ WALL). Querying
-    ``get_tile_env`` out of vision raises GameError and aborts the turn.
+    Matches engine ``is_tile_passable`` terrain rules: walls and non-walkable
+    buildings (harvesters, gunners, barriers, …) block; conveyors, splitters,
+    and the allied Core do not. Fog-safe: unseen tiles are treated as
+    passable (fog ≠ WALL). Querying ``get_tile_env`` out of vision raises
+    GameError and aborts the turn.
     """
     if not in_bounds(ct, pos):
         return False
@@ -79,7 +82,17 @@ def passable_env(ct: Controller, pos: Position) -> bool:
     if vis is False:
         return True
     try:
-        return ct.get_tile_env(pos) != Environment.WALL
+        if ct.get_tile_env(pos) == Environment.WALL:
+            return False
+        bid = ct.get_tile_building_id(pos)
+        if bid is None:
+            return True
+        et = ct.get_entity_type(bid)
+        if et in (EntityType.CONVEYOR, EntityType.SPLITTER):
+            return True
+        if et == EntityType.CORE and ct.get_team(bid) == ct.get_team():
+            return True
+        return False
     except Exception:
         return True
 
@@ -113,7 +126,11 @@ def on_or_orth_adjacent_to_core(pos: Position, core: Position) -> bool:
 
 
 def tile_has_conveyor(ct: Controller, tile: Position) -> bool:
-    """True if a friendly/any conveyor is visible on ``tile``. Fog → False."""
+    """True if a *friendly* conveyor is visible on ``tile``. Fog → False.
+
+    Enemy belts must not count — treating them as ours made planners reuse
+    them and builders face into them, dumping titanium into the enemy Core.
+    """
     vis = _in_vision(ct, tile)
     if vis is False:
         return False
@@ -121,7 +138,52 @@ def tile_has_conveyor(ct: Controller, tile: Position) -> bool:
         bid = ct.get_tile_building_id(tile)
         if bid is None:
             return False
-        return ct.get_entity_type(bid) == EntityType.CONVEYOR
+        if ct.get_entity_type(bid) != EntityType.CONVEYOR:
+            return False
+        return ct.get_team(bid) == ct.get_team()
+    except Exception:
+        return False
+
+
+def tile_has_enemy_logistics(ct: Controller, tile: Position) -> bool:
+    """True if a visible enemy conveyor or splitter occupies ``tile``."""
+    vis = _in_vision(ct, tile)
+    if vis is False:
+        return False
+    try:
+        bid = ct.get_tile_building_id(tile)
+        if bid is None:
+            return False
+        if ct.get_team(bid) == ct.get_team():
+            return False
+        return ct.get_entity_type(bid) in (EntityType.CONVEYOR, EntityType.SPLITTER)
+    except Exception:
+        return False
+
+
+def tile_feeds_enemy(ct: Controller, tile: Position, facing: Direction) -> bool:
+    """True if a conveyor on ``tile`` facing ``facing`` would output into enemy logistics."""
+    if facing == Direction.CENTRE or not facing.is_cardinal():
+        return False
+    out = tile.add(facing)
+    if not in_bounds(ct, out):
+        return False
+    vis = _in_vision(ct, out)
+    if vis is False:
+        return False
+    try:
+        bid = ct.get_tile_building_id(out)
+        if bid is None:
+            return False
+        if ct.get_team(bid) == ct.get_team():
+            return False
+        et = ct.get_entity_type(bid)
+        return et in (
+            EntityType.CONVEYOR,
+            EntityType.SPLITTER,
+            EntityType.CORE,
+            EntityType.HARVESTER,
+        )
     except Exception:
         return False
 

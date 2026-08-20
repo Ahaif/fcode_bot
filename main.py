@@ -5,9 +5,12 @@
 
 Layout (keep imports shallow — Tier-1 code only):
   constants.py   — knobs, store slots, phase names
+  team_store.py  — packed slot-0 team meta helpers
+  map_knowledge.py — per-unit known_env + team sightings/choke
   geometry.py    — movement / adjacency / shortest-path helpers
   navigator.py   — shared Bug2 / wall-follow movement
   assignment.py  — per-builder economy ownership memory
+  claim_manager.py — ore claim board (slots 6–15)
   economy.py     — ore → harvester → belt home (shortest path only)
   explore.py     — sector exploration from Core
   defense.py     — gunners around our Core

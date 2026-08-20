@@ -32,17 +32,21 @@ SPAWN_DIRS = (
 )
 
 # ---------------------------------------------------------------------------
-# Comm store (writes visible next round only)
+# Comm store (writes visible next round only; values are u32)
 # ---------------------------------------------------------------------------
 
-SLOT_CORE_X = 0
-SLOT_CORE_Y = 1
-SLOT_ENEMY_CORE_X = 2
-SLOT_ENEMY_CORE_Y = 3
-SLOT_ENEMY_CORE_KNOWN = 4  # 1 when a friendly unit has seen the enemy Core
-SLOT_GUNNER_COUNT = 5      # approximate; bumped when we place a gunner
-# Explicit mining ownership board (comm store is only 16 ints total).
-# Slots 6..15: up to 10 packed claims. Value 0 = empty.
+# Slot 0: packed team meta (own/enemy core + known + gunner count).
+# See team_store.py for pack layout and helpers — do not decode raw.
+SLOT_TEAM_META = 0
+# Slots 1-2: enemy building sightings (MapKnowledge, Stage B).
+SLOT_SIGHTING_0 = 1
+SLOT_SIGHTING_1 = 2
+# Slot 3: choke hint (MapKnowledge, Stage B).
+SLOT_CHOKE_HINT = 3
+# Slots 4-5: reserved for Phase 4 (defense) / Phase 5 (offense) — leave 0.
+SLOT_RESERVED_PHASE4 = 4
+SLOT_RESERVED_PHASE5 = 5
+# Slots 6..15: ore claim board (unchanged).
 # Pack: builder_id * 100000 + x * 256 + y + 1
 SLOT_CLAIM_BASE = 6
 MAX_ORE_CLAIMS = 10  # slots 6..15 inclusive

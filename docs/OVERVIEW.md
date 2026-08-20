@@ -58,7 +58,8 @@ Rough mapping of today's files onto the target layers:
 | `economy.py` | `Roles` (builder execution) + a sliver of `Mission`/`Map` (ore scanning/targeting is a scan-the-map decision, not just execution) | ore targeting logic should eventually move to `Map`/`Mission`, execution stays in `Roles` |
 | `explore.py` | `Roles` (movement execution) + `Mission`/`Map` (frontier/waypoint selection is spatial-knowledge logic) | same kind of gap as `economy.py` |
 | `defense.py` | `Roles` (gunner placement execution) + `Policy` (thresholds like `MAX_GUNNERS`, `DEFENSE_RING_SQ` are exactly the kind of thing `06_POLICY.md` says belongs in a tunable policy layer) | thresholds live in `constants.py` today, which is fine per `06_POLICY.md` — there's just no `Policy.decide()` state machine reading them yet |
-| `combat.py` | `Roles` (attack execution) + `Map` (`note_enemy_core`/`enemy_core_target` *is* the enemy-core-memory the target `MapKnowledge.enemy_core_pos` field describes, just stored in the comm store directly instead of a `Map` object) | this is the closest thing to a `Map` layer that exists today |
+| `combat.py` | `Roles` (attack execution); enemy Core publish/read via `team_store` | `note_enemy_core` writes packed meta; MapKnowledge also records non-core sightings |
+| `map_knowledge.py` + `team_store.py` | `Map` layer | data-only for Phase 3; defense/offense not consuming yet |
 | `navigator.py` | `Navigator` (Layer 3.5, `docs/ARCHITECTURE.md`) — matches the target almost exactly | none — this is the one layer that's fully built as designed |
 | `claim_manager.py` + `assignment.py` | `Assignment` (Layer 4, stands in for `Planner`) | none by design — see `docs/04_PLANNER.md` decision note; a centralized `planner.py` is deliberately not planned |
 | `constants.py` | `Policy` config surface (tunable knobs, per `06_POLICY.md`) | correctly separated already |
@@ -87,8 +88,10 @@ per `docs/02_MAP.md`.
 
 ### `constants.py` — tuning knobs, store slots, phase names
 - `CARDINALS`, `SPAWN_DIRS` — direction tuples used for iteration order.
-- `SLOT_*` — comm store slot assignments (core pos, enemy core pos/known
-  flag, gunner count). Only 16 slots total, one-round write lag.
+- `SLOT_*` — comm store: slot 0 team meta (`team_store.py`), slots 1–2
+  enemy sightings, slot 3 choke, slots 4–5 reserved Phase 4/5, slots 6–15
+  ore claims (`claim_manager.py`). Only 16 slots total, u32 values,
+  one-round write lag.
 - `MAX_BUILDERS`, `MAX_GUNNERS`, `AMMO_CONVERT_CHUNK`, `TITANIUM_RESERVE` —
   economy/army sizing knobs.
 - `STUCK_LIMIT`, `WAYPOINTS_BEFORE_COMBAT`, `DEFENSE_RING_SQ` — movement and
@@ -275,11 +278,9 @@ gate each layer with a manual replay check before moving to the next
 1. **WorldState** (`docs/WORLDSTATE.md`) — one per-round snapshot per
    unit; the only layer allowed to call `ct.*` directly. *Not built as a
    real object* — every role still calls `ct.*` directly.
-2. **Map** (`docs/02_MAP.md`) — cumulative spatial knowledge (ore tiles,
-   own/enemy Core, danger map) built from WorldState across rounds.
-   *Partial* — `claim_manager.py` (ore ownership) and `combat.py`
-   (`note_enemy_core`) cover pieces of this via the comm store; no
-   unified `MapKnowledge` object.
+2. **Map** (`docs/02_MAP.md`) — cumulative spatial knowledge.
+   *Built (data-only)* — `map_knowledge.py` + `team_store.py`; claims still
+   in `claim_manager.py`. Not yet driving defense/offense decisions.
 3. **Mission** (`docs/03_MISSION.md`) — team-level objective list
    (`BUILD_ECONOMY`, `DEFEND_CORE`, `SCOUT`, `ATTACK`), no per-unit
    assignment yet. *Not built.*
@@ -309,7 +310,7 @@ gate each layer with a manual replay check before moving to the next
 | Titanium income too low / bad ore choice | `economy.scan_ore`, `economy.pick_ore_stand`, `docs/phases/phase2_optimization.md` |
 | Gunners missing, misplaced, or facing the wrong way | `defense.py`, `roles/gunner_role.py`, `constants.DEFENSE_RING_SQ`/`MAX_GUNNERS`, `docs/phases/phase4_defense.md` |
 | Offense not finding/hitting enemy economy | `combat.py`, `roles/builder_role.py` (`PHASE_ATTACK`), `docs/phases/phase5_offense.md` |
-| Need map memory beyond the comm store (ore clusters, choke points) | there is no `map_knowledge.py` yet — this is Phase 3, see `docs/02_MAP.md` and `docs/phases/phase3_map_intelligence.md` |
+| Need map memory / enemy sightings / choke | `map_knowledge.py`, `team_store.py`, `docs/02_MAP.md`, `docs/phases/phase3_map_intelligence.md` |
 | Need a real win/lose reactive mode switch | there is no `policy.py` yet — this is Phase 6, see `docs/06_POLICY.md` and `docs/phases/phase6_strategic_decisions.md` |
 | CPU/idle-time/waste cleanup | cross-cutting, `docs/phases/phase7_optimization.md` |
 | Parameter sweeps / self-play tuning | `constants.py` (values only, never runtime code), `docs/phases/phase8_ai_parameter_tuning.md` |

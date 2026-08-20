@@ -25,7 +25,9 @@ from geometry import (
     on_or_orth_adjacent_to_core,
     orth_adjacent,
     passable_env,
+    tile_feeds_enemy,
     tile_has_conveyor,
+    tile_has_enemy_logistics,
     xy,
 )
 
@@ -166,7 +168,11 @@ def _visible(ct: Controller, tile: Position) -> bool:
 
 
 def _known_blocked(ct: Controller, tile: Position, core: Position) -> bool:
-    """True if tile must not receive a conveyor (visible wall/ore/core/building)."""
+    """True if tile must not receive a conveyor (visible wall/ore/core/building).
+
+    Enemy conveyors/splitters are *not* hard-blocked: the only choke home may
+    run through them. The executor clears those tiles (melee) then paves.
+    """
     if not in_bounds(ct, tile):
         return True
     if is_core_tile(tile, core):
@@ -178,9 +184,14 @@ def _known_blocked(ct: Controller, tile: Position, core: Position) -> bool:
         return True
     bid = ct.get_tile_building_id(tile)
     if bid is not None:
-        # Existing conveyor is OK (already built); other buildings block.
         try:
-            if ct.get_entity_type(bid) == EntityType.CONVEYOR:
+            et = ct.get_entity_type(bid)
+            if et == EntityType.CONVEYOR and ct.get_team(bid) == ct.get_team():
+                return False
+            # Clearable enemy logistics — plan through, smash later.
+            if et in (EntityType.CONVEYOR, EntityType.SPLITTER) and (
+                ct.get_team(bid) != ct.get_team()
+            ):
                 return False
         except Exception:
             pass
@@ -218,8 +229,13 @@ def _strip_core_suffix(tiles: list[Position], core: Position) -> list[Position]:
 
 
 def _path_clear(ct: Controller, tiles: list[Position], core: Position) -> bool:
+    """True if every tile is visible and legal for a conveyor (no fog cheating)."""
     for t in tiles:
-        if _visible(ct, t) and tile_has_conveyor(ct, t):
+        if not _visible(ct, t):
+            # Axis shortcuts must not pave through fog — fog may be WALL
+            # (sweden closed pockets). BFS may still cross fog later.
+            return False
+        if tile_has_conveyor(ct, t) or tile_has_enemy_logistics(ct, t):
             continue
         if _known_blocked(ct, t, core):
             return False
@@ -251,8 +267,16 @@ def _bfs_path(
     start: Position,
     goal: Position,
     core: Position,
+    *,
+    allow_fog: bool = True,
 ) -> list[Position] | None:
-    """Shortest grid path start→goal avoiding known blocked tiles. Planner only."""
+    """Shortest grid path start→goal avoiding known blocked tiles. Planner only.
+
+    When ``allow_fog`` is False, only expand onto visible tiles (plus start).
+    Prefer that first so we never route a belt through an unseen wall into a
+    closed pocket (sweden). Fog-tolerant BFS remains as a fallback for long
+    belts across unexplored ground.
+    """
     if xy(start) == xy(goal):
         return [Position(start.x, start.y)]
     limit = manhattan(start, goal) + max(ct.get_map_width(), ct.get_map_height())
@@ -268,6 +292,8 @@ def _bfs_path(
             if key in prev or not in_bounds(ct, nxt):
                 continue
             if is_core_tile(nxt, core):
+                continue
+            if not allow_fog and not _visible(ct, nxt):
                 continue
             if _known_blocked(ct, nxt, core):
                 if not (_visible(ct, nxt) and tile_has_conveyor(ct, nxt)):
@@ -302,18 +328,19 @@ def compute_conveyor_plan(
                 raw = [stand] + [t for t in raw if xy(t) != xy(stand)]
             return raw
 
-    # Fallback: BFS to the nearest Core-approach tile that is reachable.
-    for approach in _core_approach_tiles(ct, core, stand):
-        if _known_blocked(ct, approach, core) and not (
-            _visible(ct, approach) and tile_has_conveyor(ct, approach)
-        ):
-            continue
-        raw = _bfs_path(ct, stand, approach, core)
-        if raw is None:
-            continue
-        if xy(raw[0]) != xy(stand):
-            raw = [stand] + raw
-        return raw
+    # Prefer BFS on known tiles only, then fog-tolerant fallback.
+    for allow_fog in (False, True):
+        for approach in _core_approach_tiles(ct, core, stand):
+            if _known_blocked(ct, approach, core) and not (
+                _visible(ct, approach) and tile_has_conveyor(ct, approach)
+            ):
+                continue
+            raw = _bfs_path(ct, stand, approach, core, allow_fog=allow_fog)
+            if raw is None:
+                continue
+            if xy(raw[0]) != xy(stand):
+                raw = [stand] + raw
+            return raw
     return None
 
 def replan_conveyor_suffix(
@@ -373,6 +400,8 @@ def plan_tile_status(
         return "fog"
     if tile_has_conveyor(ct, tile):
         return "conveyor"
+    if tile_has_enemy_logistics(ct, tile):
+        return "enemy_belt"
     env = ct.get_tile_env(tile)
     if env == Environment.WALL:
         return "wall"
@@ -407,6 +436,8 @@ def try_build_plan_tile(
     status = plan_tile_status(ct, tile, core)
     if status == "conveyor":
         return "already_conveyor"
+    if status == "enemy_belt":
+        return "blocked:enemy_belt"
     if status in ("wall", "ore", "building", "core", "oob"):
         return f"blocked:{status}"
     if status == "unit":
@@ -415,10 +446,29 @@ def try_build_plan_tile(
     face_target = next_tile if next_tile is not None else nearest_core_tile(tile, core)
     if next_tile is not None and is_core_tile(next_tile, core):
         face_target = nearest_core_tile(tile, core)
-    facing = facing_toward(tile, face_target)
-    if ct.can_build_conveyor(tile, facing):
-        ct.build_conveyor(tile, facing)
-        return "built"
+
+    preferred = facing_toward(tile, face_target)
+    # Never dump ore into enemy belts/core — try other cardinals toward target.
+    candidates = [preferred]
+    for d in CARDINALS:
+        if d != preferred:
+            candidates.append(d)
+    # Prefer facings that still reduce Manhattan distance to the face target.
+    candidates.sort(
+        key=lambda d: (
+            0 if d == preferred else 1,
+            manhattan(tile.add(d), face_target),
+            d.name,
+        )
+    )
+    for facing in candidates:
+        if tile_feeds_enemy(ct, tile, facing):
+            continue
+        if ct.can_build_conveyor(tile, facing):
+            ct.build_conveyor(tile, facing)
+            return "built"
+    if any(tile_feeds_enemy(ct, tile, d) for d in CARDINALS):
+        return "blocked:enemy_sink"
     return "can_build_false"
 
 

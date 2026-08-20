@@ -9,14 +9,10 @@ from __future__ import annotations
 
 from fcode import Controller, EntityType, Position
 
-from constants import (
-    CARDINALS,
-    SLOT_ENEMY_CORE_KNOWN,
-    SLOT_ENEMY_CORE_X,
-    SLOT_ENEMY_CORE_Y,
-)
+from constants import CARDINALS
 from geometry import builder_can_act, in_bounds
 from navigator import step_to
+from team_store import read_enemy_core, write_enemy_core
 
 
 def note_enemy_core(ct: Controller) -> None:
@@ -27,17 +23,15 @@ def note_enemy_core(ct: Controller) -> None:
             continue
         if ct.get_team(uid) == my_team:
             continue
-        pos = ct.get_position(uid)
-        ct.write_store(SLOT_ENEMY_CORE_X, pos.x)
-        ct.write_store(SLOT_ENEMY_CORE_Y, pos.y)
-        ct.write_store(SLOT_ENEMY_CORE_KNOWN, 1)
+        write_enemy_core(ct, ct.get_position(uid))
         return
 
 
 def enemy_core_target(ct: Controller, own_core: Position | None) -> Position | None:
     """Known enemy Core from the store, else rotational symmetry guess."""
-    if ct.read_store(SLOT_ENEMY_CORE_KNOWN) == 1:
-        return Position(ct.read_store(SLOT_ENEMY_CORE_X), ct.read_store(SLOT_ENEMY_CORE_Y))
+    known = read_enemy_core(ct)
+    if known is not None:
+        return known
     # Most league maps are rotationally symmetric: (x,y) → (W-1-x, H-1-y).
     if own_core is not None:
         w, h = ct.get_map_width(), ct.get_map_height()
