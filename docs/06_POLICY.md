@@ -1,5 +1,54 @@
 # Layer: Policy
 
+## Status: partially built as `condition_state.py`
+
+`get_condition_state(ct) -> SAFE | CORE_THREAT | ECONOMY_THREAT |
+STARVATION` (not the `PolicyMode` enum below) is real, live, and consumed
+by `defense.py` (turret dispatch) and `combat.py` (attacker dispatch) —
+see `PROGRESS_TRACKER.md`'s "How Defense/Offense interact with Assignment
+and Economy" for the exact mechanics and `docs/ARCHITECTURE.md` Layer 6
+for the architectural framing. It was built alongside Phase 4/5 rather
+than last, because turret placement and attack dispatch both needed *some*
+threat signal to react to — narrower than this doc's original design, but
+proven on real ladder matches rather than sitting unused.
+
+What it does cover:
+- `CORE_THREAT` ≈ this doc's `DEFEND` (real attack/melee range against the
+  Core, not just "enemy visible nearby" — `CORE_THREAT_RANGE_SQ_GUNNER`/
+  `_SENTINEL`/`_BUILDER`/`_BARRIER` from the actual engine range
+  constants).
+- The capped one-attacker dispatch ≈ a narrow slice of `ATTACK` — triggers
+  reactively on `CORE_THREAT` + affordability, not on `global_resources >
+  ATTACK_THRESHOLD` as designed below.
+- `STARVATION` is the only resource-arbitration concern between Economy
+  and Defense/Offense spending that exists at all today (no reservation
+  system beyond it).
+
+What's still missing (the real remaining scope of this layer):
+- No `BOOTSTRAP` or `ENDGAME` modes.
+- No `ATTACK_THRESHOLD`-style economy-strength gate — see the decision
+  function below; today's actual trigger is `CORE_THREAT` being true, not
+  "the economy is strong enough to justify pushing." This is deliberate
+  for now (small, capped, "just to have a first attack" per the
+  instruction that shaped the current Offense implementation), not an
+  oversight — but it's exactly the timing decision this doc describes
+  Policy owning, unaddressed.
+- No single `PolicyMode` object every layer reads — each condition is read
+  independently by whichever module needs it (decentralized, same pattern
+  as Assignment/`claim_manager.py`, not the "recompute locally vs. read
+  from comm store" choice this doc's own "Consistency across units"
+  section below assumes gets made once and reused).
+- No `BOOTSTRAP_ROUNDS`/`under_threat` implementation as literally
+  specified below — `condition_state.py`'s equivalents
+  (`CORE_THREAT_RANGE_SQ_*`, `STARVATION_ROUNDS`) are real but shaped
+  around what Defense/Offense actually needed, not derived from this
+  doc's flat rule table.
+
+The design below (the `PolicyMode` enum, the `decide()` rule table,
+`ATTACK_THRESHOLD`) is still the target for closing that gap — treat it as
+what Phase 6 finishes, not as describing something already obsoleted by
+`condition_state.py`.
+
 ## Responsibility
 
 The one true global-mode switch. Everything below Policy just executes

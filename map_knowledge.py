@@ -33,6 +33,51 @@ _height = 0
 _known_env: bytearray | None = None
 _last_update_round = -1
 
+# Round-scoped cache of this unit's nearby buildings / units. The engine
+# isolates module state per living unit, so this is per-unit; keyed by round
+# so a single get_nearby_* pair per round is reused by every consumer
+# (map_knowledge.update, condition_state, ...) instead of each re-issuing the
+# call. Real --tle 10 runs timed out when these calls were duplicated.
+_cache_round: int | None = None
+_cached_buildings: list[int] = []
+_cached_units: list[int] = []
+
+
+def _refresh_entity_cache(ct: Controller) -> None:
+    global _cache_round, _cached_buildings, _cached_units
+    try:
+        rnd = ct.get_current_round()
+    except Exception:
+        # No round number available (e.g. a minimal test double) — never
+        # treat this as a cache hit. -1 used to double as both "reset"
+        # sentinel and exception fallback, so a Controller without
+        # get_current_round() silently got a permanently empty cache
+        # instead of ever refreshing (found via test_claim_manager.py /
+        # test_ownership.py failures after routing claim_manager's contest
+        # resolution through this cache).
+        rnd = None
+    if rnd is not None and rnd == _cache_round:
+        return
+    _cache_round = rnd
+    try:
+        _cached_buildings = list(ct.get_nearby_buildings())
+    except Exception:
+        _cached_buildings = []
+    try:
+        _cached_units = list(ct.get_nearby_units())
+    except Exception:
+        _cached_units = []
+
+
+def get_cached_buildings(ct: Controller) -> list[int]:
+    _refresh_entity_cache(ct)
+    return _cached_buildings
+
+
+def get_cached_units(ct: Controller) -> list[int]:
+    _refresh_entity_cache(ct)
+    return _cached_units
+
 # Sighting type codes (store).
 _TYPE_EMPTY = 0
 _TYPE_HARVESTER = 1
@@ -278,10 +323,7 @@ def update(ct: Controller) -> None:
     # Enemy building sightings (not Core — that is team_store).
     my_team = ct.get_team()
     candidates: list[tuple[Position, int]] = []
-    try:
-        buildings = ct.get_nearby_buildings()
-    except Exception:
-        buildings = []
+    buildings = get_cached_buildings(ct)
     for uid in buildings:
         try:
             if ct.get_team(uid) == my_team:
@@ -341,7 +383,11 @@ def _audit_intel(ct: Controller, msg: str) -> None:
 
 def reset_for_tests() -> None:
     global _width, _height, _known_env, _last_update_round
+    global _cache_round, _cached_buildings, _cached_units
     _width = 0
     _height = 0
     _known_env = None
     _last_update_round = -1
+    _cache_round = None
+    _cached_buildings = []
+    _cached_units = []

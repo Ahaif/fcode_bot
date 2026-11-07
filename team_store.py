@@ -22,7 +22,7 @@ from __future__ import annotations
 
 from fcode import Controller, Position
 
-from constants import SLOT_TEAM_META
+from constants import SLOT_ATTACK_BUILDER, SLOT_HAS_LAUNCHER, SLOT_TEAM_META
 
 _MASK5 = 31
 _MASK3 = 7
@@ -155,3 +155,53 @@ def read_attack_committed(ct: Controller) -> bool:
 
 def write_attack_committed(ct: Controller, value: bool) -> None:
     write_team_flag(ct, FLAG_ATTACK_COMMITTED, value)
+
+
+# ---------------------------------------------------------------------------
+# Slot 4 — team-wide "a launcher already exists" flag (Phase 5 offense).
+# ---------------------------------------------------------------------------
+
+
+def read_has_launcher(ct: Controller) -> bool:
+    try:
+        return int(ct.read_store(SLOT_HAS_LAUNCHER)) != 0
+    except Exception:
+        return False
+
+
+def write_has_launcher(ct: Controller) -> None:
+    ct.write_store(SLOT_HAS_LAUNCHER, 1)
+
+
+# ---------------------------------------------------------------------------
+# Slot 5 — dedicated attacker builder id + claim round (heartbeat).
+#
+# Packed: (builder_id << 11) | (claim_round & 0x7FF). One capped attacker
+# team-wide; the holder refreshes the round every turn it runs so the slot
+# only goes stale if the holder actually died (see combat.attack_slot_stale).
+# ---------------------------------------------------------------------------
+
+_ATTACK_ROUND_MASK = 0x7FF  # rounds 0..2047 covers the 1000-round match
+
+
+def read_attack_builder_id(ct: Controller) -> int:
+    try:
+        return (int(ct.read_store(SLOT_ATTACK_BUILDER)) & 0xFFFFFFFF) >> 11
+    except Exception:
+        return 0
+
+
+def read_attack_slot_claim_round(ct: Controller) -> int:
+    try:
+        return int(ct.read_store(SLOT_ATTACK_BUILDER)) & _ATTACK_ROUND_MASK
+    except Exception:
+        return 0
+
+
+def write_attack_builder_id(ct: Controller, uid: int) -> None:
+    """Write id + stamp the current round (the heartbeat)."""
+    try:
+        rnd = int(ct.get_current_round()) & _ATTACK_ROUND_MASK
+    except Exception:
+        rnd = 0
+    ct.write_store(SLOT_ATTACK_BUILDER, ((int(uid) & 0x1FFFFF) << 11) | rnd)

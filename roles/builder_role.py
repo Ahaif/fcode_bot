@@ -18,20 +18,28 @@ from fcode import Controller, EntityType, Position
 
 import claim_manager
 from assignment import get_assignment
+import combat
 from combat import attack_step, note_enemy_core, try_attack_adjacent
+import condition_state
 from constants import (
     PHASE_ATTACK,
     PHASE_BUILD_CONVEYOR,
     PHASE_BUILD_HARVESTER,
     PHASE_COMPLETE_TASK,
     PHASE_DEFEND,
+    PHASE_DEFEND_BUILD,
     PHASE_EXPLORE,
     PHASE_FAILED_TASK,
     PHASE_MOVE_TO_STAND,
     PHASE_PLAN_CONVEYOR,
     PHASE_RETURN_HOME,
+    DEFEND_BUILD_COOLDOWN_ROUNDS,
+    DEFEND_BUILD_TIMEOUT_ROUNDS,
+    ECONOMY_PAUSE_MAX_ROUNDS,
+    ORPHAN_HARVESTER_RETRY_CAP,
     STUCK_LIMIT,
 )
+import defense
 from defense import defend_step
 from economy import (
     clear_build_plan,
@@ -59,10 +67,7 @@ from team_store import read_own_core
 import map_knowledge
 
 _BUILDER_AUDIT = os.environ.get("BUILDER_AUDIT", "") == "1"
-_AUDIT_PATH = os.environ.get(
-    "BUILDER_AUDIT_LOG",
-    os.path.join(os.path.dirname(os.path.dirname(__file__)), "builder_audit.log"),
-)
+_AUDIT_PATH = os.environ.get("BUILDER_AUDIT_LOG", "builder_audit.log")
 _AUDIT_FP = None
 
 
@@ -122,7 +127,7 @@ def _ensure_core_pos(ct: Controller, state: object) -> None:
     if getattr(state, "core_pos", None) is not None:
         return
     my_team = ct.get_team()
-    for uid in ct.get_nearby_buildings():
+    for uid in condition_state.get_cached_buildings(ct):
         if ct.get_entity_type(uid) == EntityType.CORE and ct.get_team(uid) == my_team:
             state.core_pos = ct.get_position(uid)  # type: ignore[attr-defined]
             return
@@ -136,22 +141,49 @@ def _try_acquire_mining_task(
     *,
     exclude: Position | None = None,
 ) -> bool:
-    """Sole acquisition entry — ClaimManager.try_acquire_work only."""
+    """Acquisition entry — a fresh ore first, else an orphaned harvester."""
     res = claim_manager.try_acquire_work(ct, state, exclude=exclude)
     idle_investigate.note_acquire_attempt(ct, state, res)
-    if not res.ok or res.ore is None:
+    if res.ok and res.ore is not None:
+        clear_build_plan(state)
+        state.approach_stand = None  # type: ignore[attr-defined]
+        _set_phase(state, PHASE_MOVE_TO_STAND, reason=f"ore_found_{xy(res.ore)}")
+        return True
+
+    orphan = claim_manager.try_adopt_orphan_harvester(ct, state, exclude=exclude)
+    if not orphan.ok or orphan.ore is None:
         return False
     clear_build_plan(state)
     state.approach_stand = None  # type: ignore[attr-defined]
-    _set_phase(state, PHASE_MOVE_TO_STAND, reason=f"ore_found_{xy(res.ore)}")
+    claim_manager.note_harvester(state, orphan.ore)
+    _set_phase(state, PHASE_PLAN_CONVEYOR, reason=f"orphan_adopted_{xy(orphan.ore)}")
     return True
 
 
 def _fail_task(ct: Controller, state: object, *, reason: str) -> None:
     idle_investigate.note_abandon(state, reason=f"fail:{reason}", builder_id=ct.get_id())
+    assignment = get_assignment(state)
+    failed_ore = assignment.ore_pos
+    had_harvester = assignment.has_harvester
     clear_build_plan(state)
     claim_manager.release(ct, state, reason=f"fail:{reason}")
-    if _try_acquire_mining_task(ct, state):
+
+    exclude: Position | None = None
+    if had_harvester and failed_ore is not None:
+        # A harvester already exists at failed_ore — never let it go
+        # unclaimed forever (see try_adopt_orphan_harvester), but cap
+        # same-tile retries so a genuinely unreachable one doesn't trap
+        # this builder in an every-turn fail/re-adopt loop.
+        last = getattr(state, "belt_fail_ore", None)
+        if last is not None and (last.x, last.y) == (failed_ore.x, failed_ore.y):
+            state.belt_fail_streak = getattr(state, "belt_fail_streak", 0) + 1  # type: ignore[attr-defined]
+        else:
+            state.belt_fail_ore = failed_ore  # type: ignore[attr-defined]
+            state.belt_fail_streak = 1  # type: ignore[attr-defined]
+        if state.belt_fail_streak >= ORPHAN_HARVESTER_RETRY_CAP:  # type: ignore[attr-defined]
+            exclude = failed_ore
+
+    if _try_acquire_mining_task(ct, state, exclude=exclude):
         return
     _set_phase(state, PHASE_FAILED_TASK, reason=reason)
 
@@ -259,7 +291,20 @@ def run_builder(ct: Controller, state: object) -> None:
         elif ore_visible and claim_manager.owned_by_other(ct, ore):
             _cancel_pre_harvester(ct, state, reason="ore_owned_by_other")
             phase = getattr(state, "phase", PHASE_EXPLORE)
-        elif getattr(state, "stuck", 0) >= STUCK_LIMIT:
+        elif phase == PHASE_MOVE_TO_STAND and getattr(state, "stuck", 0) >= STUCK_LIMIT:
+            # Movement-only: genuinely not making progress toward the stand
+            # tile. Never applies in PHASE_BUILD_HARVESTER — there, standing
+            # still is *correct* (already in position), so the same signal
+            # would mean "waiting to afford the harvester," not "stuck." A
+            # tight 3-round limit there abandoned a perfectly good claim
+            # after a brief titanium shortage (2026-08-22 report); a
+            # genuinely permanent blocker still recovers via the same
+            # lenient stuck-recovery path build_conveyor/return_home use.
+            _cancel_pre_harvester(ct, state, reason="stuck_before_harvester")
+            phase = getattr(state, "phase", PHASE_EXPLORE)
+        elif phase == PHASE_BUILD_HARVESTER and getattr(state, "stuck", 0) >= max(
+            STUCK_LIMIT * 3, 9
+        ):
             _cancel_pre_harvester(ct, state, reason="stuck_before_harvester")
             phase = getattr(state, "phase", PHASE_EXPLORE)
     elif ore is not None and phase in (
@@ -298,19 +343,95 @@ def run_builder(ct: Controller, state: object) -> None:
                 _fail_task(ct, state, reason="stuck_during_belt")
                 phase = getattr(state, "phase", PHASE_EXPLORE)
 
-    # Exactly one acquisition path for free builders every turn.
-    if get_assignment(state).ore_pos is None:
-        if _try_acquire_mining_task(ct, state):
-            phase = PHASE_MOVE_TO_STAND
+    # Reactive layer: threat sensing drives free builders before economy.
+    # Busy builders (an owned ore task) are never yanked for a routine
+    # threat — should_enter_* and should_dispatch_* both refuse when a
+    # mining assignment is active, which keeps the economy benchmark
+    # intact. The one exception is should_interrupt_for_core_defense below:
+    # an armed threat already in range with *zero* friendly coverage means
+    # the Core can die this turn with nobody answering, which outweighs a
+    # single mining task (any harvester it orphans is picked back up later
+    # via try_adopt_orphan_harvester).
+    cond = condition_state.get_condition_state(ct)
+    core = getattr(state, "core_pos", None)
+    in_combat_phase = phase in (PHASE_ATTACK, PHASE_DEFEND_BUILD)
+    # Off cooldown after a DEFEND_BUILD_TIMEOUT_ROUNDS give-up — see
+    # DEFEND_BUILD_COOLDOWN_ROUNDS's own comment for why this builder must
+    # not be immediately pulled back into the same unresolved threat.
+    defend_build_ready = ct.get_current_round() >= getattr(
+        state, "defend_build_cooldown_until", 0
+    )
+
+    if (
+        get_assignment(state).ore_pos is not None
+        and not in_combat_phase
+        and core is not None
+        and cond == condition_state.CORE_THREAT
+        and defend_build_ready
+        and defense.should_interrupt_for_core_defense(ct, state, core)
+    ):
+        claim_manager.release(ct, state, reason="core_in_immediate_danger")
+        _set_phase(state, PHASE_DEFEND_BUILD, reason="core_in_immediate_danger")
+        phase = PHASE_DEFEND_BUILD
+        in_combat_phase = True
+
+    if get_assignment(state).ore_pos is None and not in_combat_phase:
+        if (
+            core is not None
+            and cond == condition_state.CORE_THREAT
+            and defend_build_ready
+            and defense.should_enter_defend_build(ct, state, core)
+        ):
+            _set_phase(state, PHASE_DEFEND_BUILD, reason="core_threat")
+            phase = PHASE_DEFEND_BUILD
+        elif (
+            core is not None
+            and cond not in (condition_state.STARVATION, condition_state.CORE_THREAT)
+            and combat.should_dispatch_attacker(ct, state, core)
+        ):
+            # Never commit a fresh builder to offense while the Core is
+            # under active threat — defense (should_enter_defend_build
+            # above) already gets first refusal on this same free builder;
+            # if it wasn't needed for defense specifically, it still
+            # shouldn't leave for a brand-new attack mission while the
+            # team is under pressure elsewhere. An already-dispatched
+            # attacker is unaffected (in_combat_phase already skips this
+            # whole block for it). Real match evidence, 2026-08-22: the
+            # Core died in 80 rounds to an enemy sentinel with "no counter
+            # attack from my side" — every spare builder should be
+            # available for defense/economy during an active rush, not
+            # peeled off to start a new offensive.
+            combat.claim_attack_slot(ct, state)
+            _set_phase(state, PHASE_ATTACK, reason="dispatch_attacker")
+            phase = PHASE_ATTACK
+        elif cond == condition_state.ECONOMY_THREAT and defense.economy_defend_step(
+            ct, state, avoid=prev
+        ):
+            _finish("economy_defend")
+            return
+        elif (
+            core is not None
+            and cond == condition_state.CORE_THREAT
+            and defense.core_in_immediate_danger(ct, core)
+            and getattr(state, "eco_pause_streak", 0) < ECONOMY_PAUSE_MAX_ROUNDS
+        ):
+            # Titanium priority: the Core has zero coverage against an armed
+            # threat right now — every bit of Ti spent starting a brand-new
+            # harvester is Ti not available for the sentinel that actually
+            # saves the Core. Already-claimed tasks are untouched (handled
+            # above via _MINING_PHASES); this only withholds *starting* a
+            # new one — the builder falls through to explore/wait instead.
+            # Bounded (ECONOMY_PAUSE_MAX_ROUNDS) — see its own comment for
+            # why an uncapped pause deadlocks the whole economy against a
+            # threat that's never fully covered.
+            state.eco_pause_streak = getattr(state, "eco_pause_streak", 0) + 1  # type: ignore[attr-defined]
+        elif _try_acquire_mining_task(ct, state):
+            state.eco_pause_streak = 0  # type: ignore[attr-defined]
+            phase = getattr(state, "phase", PHASE_MOVE_TO_STAND)
             acted_hint = (
                 f"claim_ore_{xy(get_assignment(state).ore_pos)}"  # type: ignore[arg-type]
             )
-        elif phase == PHASE_DEFEND:
-            pass
-        elif phase == PHASE_EXPLORE and getattr(state, "exploration_complete", False):
-            _enter_late_game(ct, state)
-            phase = PHASE_DEFEND
-    else:
+    elif not in_combat_phase:
         phase = getattr(state, "phase", phase)
 
     _audit_fsm(ct, state, event="dispatch")
@@ -335,7 +456,72 @@ def run_builder(ct: Controller, state: object) -> None:
         _state_return_home(ct, state, avoid=prev)
         _finish()
         return
+    if phase == PHASE_DEFEND_BUILD:
+        if core is None:
+            state.defend_build_rounds = 0  # type: ignore[attr-defined]
+            _set_phase(state, PHASE_EXPLORE, reason="no_core_for_defend")
+            step_explore(ct, state, avoid=prev)
+            _finish()
+            return
+        threats = condition_state.get_core_threats(ct, core)
+        timed_out = (
+            bool(threats)
+            and getattr(state, "defend_build_rounds", 0) >= DEFEND_BUILD_TIMEOUT_ROUNDS
+        )
+        if not threats or timed_out:
+            # timed_out: give up on this specific threat-response attempt —
+            # a threat that never clears in DEFEND_BUILD_TIMEOUT_ROUNDS
+            # rounds means either no legal placement exists here or the
+            # enemy is replenishing faster than we can cover it. Staying
+            # stuck here forever (PHASE_DEFEND_BUILD has no other exit)
+            # guarantees total economy starvation across up to
+            # DEFEND_BUILD_MAX_FROM_TRIGGER builders at once — a real match
+            # loss (2026-08-22, jotunheim) — which is worse than accepting
+            # the risk and resuming economy.
+            state.defend_build_rounds = 0  # type: ignore[attr-defined]
+            if timed_out:
+                # Ineligible to be pulled back into PHASE_DEFEND_BUILD for a
+                # while — an unresolved threat would otherwise re-trigger
+                # should_enter_defend_build / should_interrupt_for_core_
+                # defense the very next round, cycling so fast a mining task
+                # never gets far enough to matter.
+                state.defend_build_cooldown_until = (  # type: ignore[attr-defined]
+                    ct.get_current_round() + DEFEND_BUILD_COOLDOWN_ROUNDS
+                )
+            reason = "defend_build_timeout" if timed_out else "core_threat_cleared"
+            _set_phase(state, PHASE_EXPLORE, reason=reason)
+            if get_assignment(state).ore_pos is None and _try_acquire_mining_task(
+                ct, state
+            ):
+                _state_move_to_stand(ct, state, avoid=prev)
+            else:
+                step_explore(ct, state, avoid=prev)
+            _finish()
+            return
+        state.defend_build_rounds = getattr(state, "defend_build_rounds", 0) + 1  # type: ignore[attr-defined]
+        defense.defend_build_step(ct, state, core, avoid=prev)
+        _finish()
+        return
+    if phase == PHASE_ATTACK:
+        # Confirm we actually won the slot the round after claiming — a
+        # same-round race could have handed it to another builder.
+        if not combat.attack_slot_claim_confirmed(ct, state):
+            combat.release_attack_slot(ct, state)
+            _set_phase(state, PHASE_EXPLORE, reason="lost_attack_slot")
+            step_explore(ct, state, avoid=prev)
+            _finish()
+            return
+        if combat.should_recall_attacker(ct, state):
+            combat.release_attack_slot(ct, state)
+            _set_phase(state, PHASE_EXPLORE, reason="attack_recalled")
+            step_explore(ct, state, avoid=prev)
+            _finish()
+            return
+        attack_step(ct, state, avoid=prev)
+        _finish("attack")
+        return
     if phase == PHASE_DEFEND:
+        # Legacy static path — no longer auto-entered, kept for safety.
         if get_assignment(state).ore_pos is None and _try_acquire_mining_task(ct, state):
             acted_hint = acted_hint or (
                 f"claim_ore_{xy(get_assignment(state).ore_pos)}"  # type: ignore[arg-type]
@@ -347,25 +533,6 @@ def run_builder(ct: Controller, state: object) -> None:
             _finish("attack_adjacent")
             return
         defend_step(ct, state, avoid=prev)
-        if get_assignment(state).ore_pos is None and _try_acquire_mining_task(ct, state):
-            acted_hint = acted_hint or (
-                f"claim_ore_{xy(get_assignment(state).ore_pos)}"  # type: ignore[arg-type]
-            )
-        _finish()
-        return
-    if phase == PHASE_ATTACK:
-        if get_assignment(state).ore_pos is None and _try_acquire_mining_task(ct, state):
-            acted_hint = acted_hint or (
-                f"claim_ore_{xy(get_assignment(state).ore_pos)}"  # type: ignore[arg-type]
-            )
-            _state_move_to_stand(ct, state, avoid=prev)
-            _finish()
-            return
-        attack_step(ct, state, avoid=prev)
-        if get_assignment(state).ore_pos is None and _try_acquire_mining_task(ct, state):
-            acted_hint = acted_hint or (
-                f"claim_ore_{xy(get_assignment(state).ore_pos)}"  # type: ignore[arg-type]
-            )
         _finish()
         return
 
@@ -374,6 +541,23 @@ def run_builder(ct: Controller, state: object) -> None:
         acted_hint = acted_hint or (
             f"claim_ore_{xy(get_assignment(state).ore_pos)}"  # type: ignore[arg-type]
         )
+    elif defense.try_repair_adjacent(ct):
+        # Opportunistic — a builder that's merely exploring/idle and finds
+        # nothing to mine still heals a damaged adjacent structure it
+        # happens to pass, instead of leaving it broken until the next
+        # active ECONOMY_THREAT response. step_explore already spent this
+        # round's movement; a heal/fire uses the separate action cooldown,
+        # so this costs nothing extra.
+        acted_hint = acted_hint or "explore_repair_adjacent"
+    elif combat.try_attack_adjacent_economy(ct):
+        # Opportunistic — likewise damage an adjacent enemy harvester/
+        # conveyor/splitter merely passed while exploring (user-requested,
+        # 2026-08-22: "economy builder should attack enemy harvesters or
+        # conveyors they meet in their way of exploring"). Adjacency-only
+        # scoping (same helper the dedicated attacker uses) means this is
+        # never a deliberate detour, only a reaction to what's already
+        # right next to the builder's own exploration path.
+        acted_hint = acted_hint or "explore_attack_adjacent_economy"
     _finish()
 
 
@@ -623,6 +807,16 @@ def _state_build_conveyor(
         nxt = plan[idx + 1] if idx + 1 < len(plan) else nearest_core_tile(tile, core)
         result = try_build_plan_tile(ct, tile, nxt, core)
         _audit_fsm(ct, state, event="build_plan_tile", reason=result, chosen=tile)
+        if result in ("insufficient_resources", "cooldown"):
+            # Correctly positioned, just waiting to afford the next tile (or
+            # off action-cooldown) — never let this read as "stuck." The
+            # stuck counter otherwise climbs every round spent waiting and
+            # eventually burns the replan budget (MAX_BELT_REPLANS) purely
+            # from titanium being temporarily tight, not a routing problem
+            # (2026-08-22 report: a harvester+belt task abandoned mid-link
+            # after a resource dry spell).
+            state.stuck = 0  # type: ignore[attr-defined]
+            return
         if result == "built" and idx == 0:
             state.stand_paved = True  # type: ignore[attr-defined]
         if result == "blocked:enemy_belt":
@@ -699,6 +893,11 @@ def _state_build_conveyor(
             face = plan[idx + 2] if idx + 2 < len(plan) else nearest_core_tile(ahead, core)
             result = try_build_plan_tile(ct, ahead, face, core)
             _audit_fsm(ct, state, event="build_ahead", reason=result, chosen=ahead)
+            if result in ("insufficient_resources", "cooldown"):
+                # See the adj_incomplete branch above — waiting to afford
+                # the tile is not "stuck."
+                state.stuck = 0  # type: ignore[attr-defined]
+                return
             if result == "blocked:enemy_belt":
                 _clear_enemy_belt_on_plan(ct, state, ahead, avoid=avoid)
                 return
@@ -715,7 +914,11 @@ def _state_build_conveyor(
                     ct, state, core, from_index=idx + 1, reason=result, chosen=ahead
                 )
             return
-        if ahead_st == "conveyor":
+        if ahead_st in ("conveyor", "unit"):
+            # "unit": a friendly/enemy unit standing on the next plan tile
+            # — never just sit still waiting for it to move (see the other
+            # occupied_by_unit fix above for why: real match evidence of a
+            # 250+ round freeze from exactly this no-op).
             step_to(ct, state, ahead, avoid=avoid)
             _audit_fsm(ct, state, event="step_ahead_on_plan", chosen=ahead)
             return
@@ -723,7 +926,17 @@ def _state_build_conveyor(
         return
 
     if status == "unit":
+        # A friendly (or enemy) unit is standing on the plan tile itself —
+        # never just sit still waiting for it to move on its own. That was
+        # a pure no-op: no movement attempted, nothing to trigger the
+        # navigator's own traffic-avoidance, so two builders that each
+        # happened to be waiting on a tile the other occupied could
+        # deadlock on each other forever (real match, 2026-08-23: two
+        # builders frozen, zero action/move cooldown, from round 47 to
+        # 300+). step_to lets the navigator sidestep or wait-with-timeout
+        # like every other phase already does.
         _audit_fsm(ct, state, event="build_wait", reason="occupied_by_unit", chosen=tile)
+        step_to(ct, state, tile, avoid=avoid)
         return
 
     # Walk the full built belt (not only prefix up to idx) so we can return to

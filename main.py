@@ -25,16 +25,13 @@ from fcode import Controller, Direction, EntityType, GameError, Position
 from assignment import Assignment, empty_assignment
 from constants import PHASE_EXPLORE
 from navigator import NAV_NORMAL
-from roles import builder_role, core_role, gunner_role
+from roles import builder_role, core_role, gunner_role, launcher_role, sentinel_role
 
 
 class Player:
     """Per-unit brain. Instance fields persist across rounds for this unit only."""
 
     def __init__(self) -> None:
-        # --- Core ---
-        self.num_spawned = 0
-
         # --- Builder ---
         self.phase = PHASE_EXPLORE
         self.core_pos: Position | None = None
@@ -49,6 +46,15 @@ class Player:
         self.explore_target: Position | None = None
         self.explore_trail: list[tuple[int, int]] = []
         self.attack_target: Position | None = None
+        # --- Dedicated attacker (combat.py) ---
+        self.attack_claim_round: int | None = None
+        self.attack_sentinel_tiles: set[tuple[int, int]] = set()
+        self.attack_last_dist: int | None = None
+        self.attack_stall_rounds = 0
+        self.attack_launcher_built = False
+        self.attack_launcher_wait_pos: Position | None = None
+        self.attack_launcher_wait_rounds = 0
+        self.attack_launched_or_gave_up = False
         self.builder_index = 0
         self.num_sectors = 4
         self.sector_init = False
@@ -87,6 +93,10 @@ class Player:
                 builder_role.run_builder(ct, self)
             elif etype == EntityType.GUNNER:
                 gunner_role.run_gunner(ct, self)
+            elif etype == EntityType.SENTINEL:
+                sentinel_role.run_sentinel(ct, self)
+            elif etype == EntityType.LAUNCHER:
+                launcher_role.run_launcher(ct, self)
         except GameError as exc:
             try:
                 import idle_investigate

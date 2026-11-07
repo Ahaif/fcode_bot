@@ -7,11 +7,13 @@ from types import SimpleNamespace
 from fcode import EntityType, Environment, Position
 
 import claim_manager
+import map_knowledge
 from assignment import get_assignment
 
 
 def setup_function() -> None:
     claim_manager.reset_for_tests()
+    map_knowledge.reset_for_tests()
 
 
 def _state(**kwargs: object) -> SimpleNamespace:
@@ -78,6 +80,96 @@ def test_acquire_atomic_cache_and_table() -> None:
     assert res.ok
     assert get_assignment(state).ore_pos == Position(4, 4)
     assert claim_manager.owner_of(Position(4, 4), ct) == 3  # type: ignore[arg-type]
+
+
+class _OrphanCt:
+    """A friendly harvester at ``harvester_tile``, optionally with a belt
+    tile at one of its orthogonal neighbours."""
+
+    def __init__(
+        self,
+        my_id: int,
+        pos: Position,
+        *,
+        harvester_tile: Position,
+        belt_tile: Position | None = None,
+    ) -> None:
+        self._id = my_id
+        self._pos = pos
+        self._store = [0] * 16
+        self._harvester_tile = harvester_tile
+        self._belt_tile = belt_tile
+
+    def get_id(self) -> int:
+        return self._id
+
+    def get_position(self, uid: int | None = None) -> Position:
+        return self._pos
+
+    def get_team(self, _uid: int | None = None) -> int:
+        return 0
+
+    def get_nearby_units(self):
+        return [self._id]
+
+    def get_entity_type(self, uid: int = 0):
+        if uid == 100:
+            return EntityType.HARVESTER
+        if uid == 101:
+            return EntityType.CONVEYOR
+        return EntityType.BUILDER_BOT
+
+    def read_store(self, slot: int) -> int:
+        return self._store[slot]
+
+    def write_store(self, slot: int, val: int) -> None:
+        self._store[slot] = val
+
+    def get_nearby_tiles(self):
+        return [self._harvester_tile]
+
+    def get_tile_env(self, _p: Position):
+        return Environment.ORE_TITANIUM
+
+    def get_tile_building_id(self, p: Position):
+        if (p.x, p.y) == (self._harvester_tile.x, self._harvester_tile.y):
+            return 100
+        if self._belt_tile is not None and (p.x, p.y) == (self._belt_tile.x, self._belt_tile.y):
+            return 101
+        return None
+
+
+def test_orphan_harvester_visible_when_no_belt_started() -> None:
+    ct = _OrphanCt(3, Position(4, 5), harvester_tile=Position(4, 4))
+    assert claim_manager.visible_orphan_harvesters(ct) == [Position(4, 4)]  # type: ignore[arg-type]
+
+
+def test_harvester_with_belt_neighbour_is_not_orphan() -> None:
+    ct = _OrphanCt(
+        3, Position(4, 6), harvester_tile=Position(4, 4), belt_tile=Position(5, 4)
+    )
+    assert claim_manager.visible_orphan_harvesters(ct) == []  # type: ignore[arg-type]
+
+
+def test_adopt_orphan_harvester_claims_it_and_sets_has_harvester() -> None:
+    ct = _OrphanCt(3, Position(4, 5), harvester_tile=Position(4, 4))
+    state = _state(claim_turns_alive=1)
+    res = claim_manager.try_adopt_orphan_harvester(ct, state)  # type: ignore[arg-type]
+    assert res.ok
+    assert res.ore == Position(4, 4)
+    assert get_assignment(state).ore_pos == Position(4, 4)
+    claim_manager.note_harvester(state, Position(4, 4))
+    assert get_assignment(state).has_harvester
+
+
+def test_adopt_orphan_harvester_respects_exclude() -> None:
+    ct = _OrphanCt(3, Position(4, 5), harvester_tile=Position(4, 4))
+    state = _state(claim_turns_alive=1)
+    res = claim_manager.try_adopt_orphan_harvester(  # type: ignore[arg-type]
+        ct, state, exclude=Position(4, 4)
+    )
+    assert not res.ok
+    assert res.reason == "no_orphan_harvester"
 
 
 def test_second_acquire_fails_while_owning() -> None:

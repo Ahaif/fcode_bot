@@ -1,0 +1,998 @@
+r=2 id=5 LAUNCHED bot_pos=(0,5) target=(5,3)
+r=3 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=4 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(4,3)
+r=5 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(4,4)
+r=6 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,4)
+r=7 id=5 skip=exception_reading_attacker err=Position out of vision range
+r=8 id=5 skip=exception_reading_attacker err=Position out of vision range
+r=9 id=5 skip=exception_reading_attacker err=Position out of vision range
+r=10 id=5 skip=exception_reading_attacker err=Position out of vision range
+r=11 id=5 skip=exception_reading_attacker err=Position out of vision range
+r=12 id=5 skip=exception_reading_attacker err=Position out of vision range
+r=13 id=5 skip=exception_reading_attacker err=Position out of vision range
+r=14 id=5 skip=exception_reading_attacker err=Position out of vision range
+r=15 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=16 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(4,3)
+r=17 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(4,4)
+r=18 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,4)
+r=19 id=5 skip=exception_reading_attacker err=Position out of vision range
+r=20 id=5 skip=exception_reading_attacker err=Position out of vision range
+r=21 id=5 skip=exception_reading_attacker err=Position out of vision range
+r=22 id=5 skip=exception_reading_attacker err=Position out of vision range
+r=23 id=5 skip=exception_reading_attacker err=Position out of vision range
+r=24 id=5 skip=exception_reading_attacker err=Position out of vision range
+r=25 id=5 skip=exception_reading_attacker err=Position out of vision range
+r=26 id=5 skip=exception_reading_attacker err=Position out of vision range
+r=27 id=5 skip=exception_reading_attacker err=Position out of vision range
+r=28 id=5 skip=exception_reading_attacker err=Position out of vision range
+r=29 id=5 skip=exception_reading_attacker err=Position out of vision range
+r=30 id=5 skip=exception_reading_attacker err=Position out of vision range
+r=31 id=5 skip=exception_reading_attacker err=Position out of vision range
+r=32 id=5 skip=exception_reading_attacker err=Position out of vision range
+r=33 id=5 skip=exception_reading_attacker err=Position out of vision range
+r=34 id=5 skip=exception_reading_attacker err=Position out of vision range
+r=35 id=5 skip=exception_reading_attacker err=Position out of vision range
+r=36 id=5 skip=exception_reading_attacker err=Position out of vision range
+r=37 id=5 skip=exception_reading_attacker err=Position out of vision range
+r=38 id=5 skip=exception_reading_attacker err=Position out of vision range
+r=39 id=5 skip=exception_reading_attacker err=Position out of vision range
+r=40 id=5 skip=exception_reading_attacker err=Position out of vision range
+r=41 id=5 skip=exception_reading_attacker err=Position out of vision range
+r=42 id=5 skip=exception_reading_attacker err=Position out of vision range
+r=43 id=5 skip=exception_reading_attacker err=Position out of vision range
+r=44 id=5 skip=exception_reading_attacker err=Position out of vision range
+r=45 id=5 skip=no_attacker_claimed
+r=46 id=5 skip=no_attacker_claimed
+r=47 id=5 skip=no_attacker_claimed
+r=48 id=5 skip=no_attacker_claimed
+r=49 id=5 skip=no_attacker_claimed
+r=50 id=5 skip=no_attacker_claimed
+r=51 id=5 skip=no_attacker_claimed
+r=52 id=5 skip=no_attacker_claimed
+r=53 id=5 skip=no_attacker_claimed
+r=54 id=5 skip=no_attacker_claimed
+r=55 id=5 skip=no_attacker_claimed
+r=56 id=5 skip=no_attacker_claimed
+r=57 id=5 skip=no_attacker_claimed
+r=58 id=5 skip=no_attacker_claimed
+r=59 id=5 skip=no_attacker_claimed
+r=60 id=5 skip=no_attacker_claimed
+r=61 id=5 skip=no_attacker_claimed
+r=62 id=5 skip=no_attacker_claimed
+r=63 id=5 skip=no_attacker_claimed
+r=64 id=5 skip=no_attacker_claimed
+r=65 id=5 skip=no_attacker_claimed
+r=66 id=5 skip=no_attacker_claimed
+r=67 id=5 skip=no_attacker_claimed
+r=68 id=5 skip=no_attacker_claimed
+r=69 id=5 skip=no_attacker_claimed
+r=70 id=5 skip=no_attacker_claimed
+r=71 id=5 skip=no_attacker_claimed
+r=72 id=5 skip=no_attacker_claimed
+r=73 id=5 skip=no_attacker_claimed
+r=74 id=5 skip=no_attacker_claimed
+r=75 id=5 skip=no_attacker_claimed
+r=76 id=5 skip=no_attacker_claimed
+r=77 id=5 skip=no_attacker_claimed
+r=78 id=5 skip=no_attacker_claimed
+r=79 id=5 skip=no_attacker_claimed
+r=80 id=5 skip=no_attacker_claimed
+r=81 id=5 skip=no_attacker_claimed
+r=82 id=5 skip=no_attacker_claimed
+r=83 id=5 skip=no_attacker_claimed
+r=84 id=5 skip=no_attacker_claimed
+r=85 id=5 skip=no_attacker_claimed
+r=86 id=5 skip=no_attacker_claimed
+r=87 id=5 skip=no_attacker_claimed
+r=88 id=5 skip=no_attacker_claimed
+r=89 id=5 skip=no_attacker_claimed
+r=90 id=5 skip=no_attacker_claimed
+r=91 id=5 skip=no_attacker_claimed
+r=92 id=5 skip=no_attacker_claimed
+r=93 id=5 skip=no_attacker_claimed
+r=94 id=5 skip=no_attacker_claimed
+r=95 id=5 skip=no_attacker_claimed
+r=96 id=5 skip=no_attacker_claimed
+r=97 id=5 skip=no_attacker_claimed
+r=98 id=5 skip=no_attacker_claimed
+r=99 id=5 skip=no_attacker_claimed
+r=100 id=5 skip=no_attacker_claimed
+r=101 id=5 skip=no_attacker_claimed
+r=102 id=5 skip=no_attacker_claimed
+r=103 id=5 skip=no_attacker_claimed
+r=104 id=5 skip=no_attacker_claimed
+r=105 id=5 skip=no_attacker_claimed
+r=106 id=5 skip=no_attacker_claimed
+r=107 id=5 skip=no_attacker_claimed
+r=108 id=5 skip=no_attacker_claimed
+r=109 id=5 skip=no_attacker_claimed
+r=110 id=5 skip=no_attacker_claimed
+r=111 id=5 skip=no_attacker_claimed
+r=112 id=5 skip=no_attacker_claimed
+r=113 id=5 skip=no_attacker_claimed
+r=114 id=5 skip=no_attacker_claimed
+r=115 id=5 skip=no_attacker_claimed
+r=116 id=5 skip=no_attacker_claimed
+r=117 id=5 skip=no_attacker_claimed
+r=118 id=5 skip=no_attacker_claimed
+r=119 id=5 skip=no_attacker_claimed
+r=120 id=5 skip=no_attacker_claimed
+r=121 id=5 skip=no_attacker_claimed
+r=122 id=5 skip=no_attacker_claimed
+r=123 id=5 skip=no_attacker_claimed
+r=124 id=5 skip=no_attacker_claimed
+r=125 id=5 skip=no_attacker_claimed
+r=126 id=5 skip=no_attacker_claimed
+r=127 id=5 skip=no_attacker_claimed
+r=128 id=5 skip=no_attacker_claimed
+r=129 id=5 skip=no_attacker_claimed
+r=130 id=5 skip=no_attacker_claimed
+r=131 id=5 skip=no_attacker_claimed
+r=132 id=5 skip=no_attacker_claimed
+r=133 id=5 skip=no_attacker_claimed
+r=134 id=5 skip=no_attacker_claimed
+r=135 id=5 skip=no_attacker_claimed
+r=136 id=5 skip=no_attacker_claimed
+r=137 id=5 skip=no_attacker_claimed
+r=138 id=5 skip=no_attacker_claimed
+r=139 id=5 skip=no_attacker_claimed
+r=140 id=5 skip=no_attacker_claimed
+r=141 id=5 skip=no_attacker_claimed
+r=142 id=5 skip=no_attacker_claimed
+r=143 id=5 skip=no_attacker_claimed
+r=144 id=5 skip=no_attacker_claimed
+r=145 id=5 skip=no_attacker_claimed
+r=146 id=5 skip=no_attacker_claimed
+r=147 id=5 skip=no_attacker_claimed
+r=148 id=5 skip=no_attacker_claimed
+r=149 id=5 skip=no_attacker_claimed
+r=150 id=5 skip=no_attacker_claimed
+r=151 id=5 skip=no_attacker_claimed
+r=152 id=5 skip=no_attacker_claimed
+r=153 id=5 skip=no_attacker_claimed
+r=154 id=5 skip=no_attacker_claimed
+r=155 id=5 skip=no_attacker_claimed
+r=156 id=5 skip=no_attacker_claimed
+r=157 id=5 skip=no_attacker_claimed
+r=158 id=5 skip=no_attacker_claimed
+r=159 id=5 skip=no_attacker_claimed
+r=160 id=5 skip=no_attacker_claimed
+r=161 id=5 skip=no_attacker_claimed
+r=162 id=5 skip=no_attacker_claimed
+r=163 id=5 skip=no_attacker_claimed
+r=164 id=5 skip=no_attacker_claimed
+r=165 id=5 skip=no_attacker_claimed
+r=166 id=5 skip=no_attacker_claimed
+r=167 id=5 skip=no_attacker_claimed
+r=168 id=5 skip=no_attacker_claimed
+r=169 id=5 skip=no_attacker_claimed
+r=170 id=5 skip=no_attacker_claimed
+r=171 id=5 skip=no_attacker_claimed
+r=172 id=5 skip=no_attacker_claimed
+r=173 id=5 skip=no_attacker_claimed
+r=174 id=5 skip=no_attacker_claimed
+r=175 id=5 skip=no_attacker_claimed
+r=176 id=5 skip=no_attacker_claimed
+r=177 id=5 skip=no_attacker_claimed
+r=178 id=5 skip=no_attacker_claimed
+r=179 id=5 skip=no_attacker_claimed
+r=180 id=5 skip=no_attacker_claimed
+r=181 id=5 skip=no_attacker_claimed
+r=182 id=5 skip=no_attacker_claimed
+r=183 id=5 skip=no_attacker_claimed
+r=184 id=5 skip=no_attacker_claimed
+r=185 id=5 skip=no_attacker_claimed
+r=186 id=5 skip=no_attacker_claimed
+r=187 id=5 skip=no_attacker_claimed
+r=188 id=5 skip=no_attacker_claimed
+r=189 id=5 skip=no_attacker_claimed
+r=190 id=5 skip=no_attacker_claimed
+r=191 id=5 skip=no_attacker_claimed
+r=192 id=5 skip=no_attacker_claimed
+r=193 id=5 skip=no_attacker_claimed
+r=194 id=5 skip=no_attacker_claimed
+r=195 id=5 skip=no_attacker_claimed
+r=196 id=5 skip=no_attacker_claimed
+r=197 id=5 skip=no_attacker_claimed
+r=198 id=5 skip=no_attacker_claimed
+r=199 id=5 skip=no_attacker_claimed
+r=200 id=5 skip=no_attacker_claimed
+r=201 id=5 skip=no_attacker_claimed
+r=202 id=5 skip=no_attacker_claimed
+r=203 id=5 skip=no_attacker_claimed
+r=204 id=5 skip=no_attacker_claimed
+r=205 id=5 skip=no_attacker_claimed
+r=206 id=5 skip=no_attacker_claimed
+r=207 id=5 skip=no_attacker_claimed
+r=208 id=5 skip=no_attacker_claimed
+r=209 id=5 skip=no_attacker_claimed
+r=210 id=5 skip=no_attacker_claimed
+r=211 id=5 skip=no_attacker_claimed
+r=212 id=5 skip=no_attacker_claimed
+r=213 id=5 skip=no_attacker_claimed
+r=214 id=5 skip=no_attacker_claimed
+r=215 id=5 skip=no_attacker_claimed
+r=216 id=5 skip=no_attacker_claimed
+r=217 id=5 skip=no_attacker_claimed
+r=218 id=5 skip=no_attacker_claimed
+r=219 id=5 skip=no_attacker_claimed
+r=220 id=5 skip=no_attacker_claimed
+r=221 id=5 skip=no_attacker_claimed
+r=222 id=5 skip=no_attacker_claimed
+r=223 id=5 skip=no_attacker_claimed
+r=224 id=5 skip=no_attacker_claimed
+r=225 id=5 skip=no_attacker_claimed
+r=226 id=5 skip=no_attacker_claimed
+r=227 id=5 skip=no_attacker_claimed
+r=228 id=5 skip=no_attacker_claimed
+r=229 id=5 skip=no_attacker_claimed
+r=230 id=5 skip=no_attacker_claimed
+r=231 id=5 skip=no_attacker_claimed
+r=232 id=5 skip=no_attacker_claimed
+r=233 id=5 skip=no_attacker_claimed
+r=234 id=5 skip=no_attacker_claimed
+r=235 id=5 skip=no_attacker_claimed
+r=236 id=5 skip=no_attacker_claimed
+r=237 id=5 skip=no_attacker_claimed
+r=238 id=5 skip=no_attacker_claimed
+r=239 id=5 skip=no_attacker_claimed
+r=240 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,5)
+r=241 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,5)
+r=242 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,6)
+r=243 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,7)
+r=244 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,7)
+r=245 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,6)
+r=246 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,5)
+r=247 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,5)
+r=248 id=5 LAUNCHED bot_pos=(0,5) target=(5,3)
+r=249 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=250 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=251 id=5 skip=can_launch_false bot_pos=(0,3) target=(5,3)
+r=252 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=253 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=254 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=255 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=256 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=257 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=258 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=259 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=260 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=261 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=262 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=263 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=264 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=265 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=266 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=267 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=268 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=269 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=270 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=271 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=272 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=273 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=274 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=275 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=276 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=277 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=278 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=279 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=280 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=281 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=282 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=283 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=284 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=285 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=286 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=287 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=288 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=289 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=290 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=291 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=292 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=293 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=294 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=295 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=296 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=297 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=298 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=299 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=300 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=301 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=302 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=303 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=304 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=305 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=306 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=307 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=308 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=309 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=310 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=311 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=312 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=313 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=314 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=315 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=316 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=317 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=318 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=319 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=320 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=321 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=322 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=323 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=324 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=325 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=326 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=327 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=328 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=329 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=330 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=331 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=332 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=333 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=334 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=335 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=336 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=337 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=338 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=339 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=340 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=341 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=342 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=343 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=344 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=345 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=346 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=347 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=348 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=349 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=350 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=351 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=352 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=353 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=354 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=355 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=356 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=357 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=358 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=359 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=360 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=361 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=362 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=363 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=364 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=365 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=366 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=367 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=368 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=369 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=370 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=371 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=372 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=373 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=374 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=375 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=376 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=377 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=378 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=379 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=380 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=381 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=382 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=383 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=384 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=385 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=386 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=387 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=388 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=389 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=390 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=391 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=392 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=393 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=394 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=395 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=396 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=397 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=398 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=399 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=400 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=401 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=402 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=403 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=404 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=405 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=406 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=407 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=408 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=409 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=410 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=411 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=412 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=413 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=414 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=415 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=416 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=417 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=418 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=419 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=420 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=421 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=422 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=423 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=424 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=425 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=426 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=427 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=428 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=429 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=430 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=431 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=432 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=433 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=434 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=435 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=436 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=437 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=438 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=439 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=440 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=441 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=442 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=443 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=444 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=445 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=446 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=447 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=448 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=449 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=450 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=451 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=452 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=453 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=454 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=455 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=456 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=457 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=458 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=459 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=460 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=461 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=462 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=463 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=464 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=465 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=466 id=5 skip=no_attacker_claimed
+r=467 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=468 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=469 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=470 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=471 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=472 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=473 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=474 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=475 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=476 id=5 skip=no_attacker_claimed
+r=477 id=5 skip=no_attacker_claimed
+r=478 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=479 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=480 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=481 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=482 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=483 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=484 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=485 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=486 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=487 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=488 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=489 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=490 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=491 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=492 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=493 id=5 skip=can_launch_false bot_pos=(0,3) target=(5,3)
+r=494 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=495 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=496 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=497 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=498 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=499 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=500 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=501 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=502 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=503 id=5 skip=no_attacker_claimed
+r=504 id=5 skip=no_attacker_claimed
+r=505 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=506 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=507 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=508 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=509 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=510 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=511 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=512 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=513 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=514 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=515 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=516 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=517 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=518 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=519 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=520 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=521 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=522 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=523 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=524 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=525 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=526 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=527 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=528 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=529 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=530 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=531 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=532 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=533 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=534 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=535 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=536 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=537 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=538 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=539 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=540 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=541 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=542 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=543 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=544 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=545 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=546 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=547 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=548 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=549 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=550 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=551 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=552 id=5 skip=can_launch_false bot_pos=(0,3) target=(5,3)
+r=553 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=554 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=555 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=556 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=557 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=558 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=559 id=5 skip=can_launch_false bot_pos=(0,3) target=(5,3)
+r=560 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=561 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=562 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=563 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=564 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=565 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=566 id=5 skip=can_launch_false bot_pos=(0,3) target=(5,3)
+r=567 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=568 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=569 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=570 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=571 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=572 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=573 id=5 skip=can_launch_false bot_pos=(0,3) target=(5,3)
+r=574 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=575 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=576 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=577 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=578 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=579 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=580 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=581 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=582 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=583 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=584 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=585 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=586 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=587 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=588 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=589 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=590 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=591 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=592 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=593 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=594 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=595 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=596 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=597 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=598 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=599 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=600 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=601 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=602 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=603 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=604 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=605 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=606 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=607 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=608 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=609 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=610 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=611 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=612 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=613 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=614 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=615 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=616 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=617 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=618 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=619 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=620 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=621 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=622 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=623 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=624 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=625 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=626 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=627 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=628 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=629 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=630 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=631 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=632 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=633 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=634 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=635 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=636 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=637 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=638 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=639 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=640 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=641 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=642 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=643 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=644 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=645 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=646 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=647 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=648 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=649 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=650 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=651 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=652 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=653 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=654 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=655 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=656 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=657 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=658 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=659 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=660 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=661 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=662 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=663 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=664 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=665 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=666 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=667 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=668 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=669 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=670 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=671 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=672 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=673 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=674 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=675 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=676 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=677 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=678 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=679 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=680 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=681 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=682 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=683 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=684 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=685 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=686 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=687 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=688 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=689 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=690 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=691 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=692 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=693 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=694 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=695 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=696 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=697 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=698 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=699 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=700 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=701 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=702 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=703 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=704 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=705 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=706 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=707 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=708 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=709 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=710 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=711 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=712 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=713 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=714 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=715 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=716 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=717 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=718 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=719 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=720 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=721 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=722 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=723 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=724 id=5 skip=no_attacker_claimed
+r=725 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=726 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=727 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=728 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=729 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=730 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=731 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=732 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=733 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=734 id=5 skip=no_attacker_claimed
+r=735 id=5 skip=no_attacker_claimed
+r=736 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=737 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=738 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=739 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=740 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=741 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=742 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=743 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=744 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=745 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=746 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=747 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=748 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=749 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=750 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=751 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=752 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=753 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=754 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=755 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=756 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=757 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=758 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=759 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=760 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=761 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=762 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=763 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=764 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=765 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=766 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=767 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=768 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=769 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=770 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=771 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=772 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=773 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=774 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=775 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=776 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=777 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=778 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=779 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=780 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=781 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=782 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=783 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=784 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=785 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=786 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=787 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=788 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=789 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=790 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=791 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=792 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=793 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=794 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=795 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=796 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=797 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=798 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=799 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=800 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=801 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=802 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=803 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=804 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=805 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=806 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=807 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=808 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=809 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=810 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=811 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=812 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=813 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=814 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=815 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=816 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=817 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=818 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=819 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=820 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=821 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=822 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=823 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=824 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=825 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=826 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=827 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=828 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=829 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=830 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=831 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=832 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=833 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=834 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=835 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=836 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=837 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=838 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=839 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=840 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=841 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=842 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=843 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=844 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=845 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=846 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=847 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=848 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=849 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=850 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=851 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=852 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=853 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=854 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=855 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=856 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=857 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=858 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=859 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=860 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=861 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=862 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=863 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=864 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=865 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=866 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=867 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=868 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=869 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=870 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=871 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=872 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=873 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=874 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=875 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=876 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=877 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=878 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=879 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=880 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=881 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=882 id=5 skip=can_launch_false bot_pos=(0,3) target=(5,3)
+r=883 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=884 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=885 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=886 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=887 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=888 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=889 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=890 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=891 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=892 id=5 skip=no_attacker_claimed
+r=893 id=5 skip=no_attacker_claimed
+r=894 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=895 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=896 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=897 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=898 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=899 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=900 id=5 skip=can_launch_false bot_pos=(0,3) target=(5,3)
+r=901 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=902 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=903 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=904 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=905 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=906 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=907 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=908 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=909 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=910 id=5 skip=no_attacker_claimed
+r=911 id=5 skip=no_attacker_claimed
+r=912 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=913 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=914 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=915 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=916 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=917 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=918 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=919 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=920 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=921 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=922 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=923 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=924 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=925 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=926 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=927 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=928 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=929 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=930 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=931 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=932 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=933 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=934 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=935 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=936 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=937 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=938 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=939 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=940 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=941 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=942 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=943 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=944 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=945 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=946 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=947 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=948 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=949 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=950 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=951 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=952 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=953 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=954 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=955 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=956 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=957 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=958 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=959 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=960 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=961 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=962 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=963 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=964 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=965 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=966 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=967 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=968 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=969 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(2,2)
+r=970 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,2)
+r=971 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(1,3)
+r=972 id=5 skip=can_launch_false bot_pos=(0,3) target=(5,3)
+r=973 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=974 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=975 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=976 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=977 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=978 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=979 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=980 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=981 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(5,3)
+r=982 id=5 skip=no_attacker_claimed
+r=983 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(3,1)
+r=984 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(4,1)
+r=985 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(4,2)
+r=986 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(4,2)
+r=987 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(4,1)
+r=988 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(3,1)
+r=989 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(3,0)
+r=990 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(3,0)
+r=991 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(3,1)
+r=992 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(4,1)
+r=993 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(4,2)
+r=994 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(4,2)
+r=995 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(4,1)
+r=996 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(3,1)
+r=997 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(3,0)
+r=998 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(3,0)
+r=999 id=5 skip=attacker_not_adjacent my_pos=(0,4) bot_pos=(3,1)

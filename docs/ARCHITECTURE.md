@@ -74,9 +74,15 @@
 
 > Note on this diagram vs. the current code: Navigator and Assignment
 > (`claim_manager.py`/`assignment.py`) are real and benchmarked today.
-> Policy, Missions, Map Knowledge (as a unified object), and World State
-> (as a real object) are not built yet — see "Architecture Layer Status"
-> in `PROGRESS_TRACKER.md` for the current per-layer state, and
+> Map Knowledge is built and, as of Phase 4/5, actually consumed (not just
+> data-only). Policy is **partially** built — `condition_state.py`
+> implements the reactive SAFE/CORE_THREAT/ECONOMY_THREAT/STARVATION signal
+> that Defense and Offense both consume, decentralized the same way
+> Assignment is (every unit recomputes locally), but it is not the full
+> `PolicyMode`/timing layer `06_POLICY.md` originally specified — see that
+> doc's own "Status" note and Layer 6 below. Missions and World State (as
+> real objects) are still not built — see "Architecture Layer Status" in
+> `PROGRESS_TRACKER.md` for the current per-layer state, and
 > `docs/OVERVIEW.md` for the file-by-file mapping.
 
 ---
@@ -317,6 +323,28 @@ ENDGAME
 Policy never cares about individual builders.
 
 Only macro strategy.
+
+**Status: partially built as `condition_state.py`.** `get_condition_state
+(ct) -> SAFE | CORE_THREAT | ECONOMY_THREAT | STARVATION`, recomputed
+fresh every round per unit from MapKnowledge sightings + own vision (no
+new map scans), decentralized the same way Assignment is (every unit
+recomputes the same answer locally — no single team-wide `PolicyMode`
+object). Consumed directly by `defense.py` (turret dispatch) and
+`combat.py` (attacker dispatch) — see `PROGRESS_TRACKER.md`'s "How
+Defense/Offense interact with Assignment and Economy" for the exact
+mechanics. `CORE_THREAT` covers `DEFEND`; the capped one-attacker dispatch
+covers a narrow slice of `ATTACK`; `STARVATION` is the only resource-
+arbitration signal between Economy and Defense/Offense spending (no
+reservation system beyond it).
+
+Real gaps vs. the design above: no `BOOTSTRAP`/`ENDGAME` modes, no
+economy-strength-gated *timing* for when to switch to `ATTACK` (today:
+reactive to `CORE_THREAT`, not "economy strong enough to push" — see
+`06_POLICY.md`'s `ATTACK_THRESHOLD` design), and no single consistent mode
+every layer reads — each of `CORE_THREAT`/`ECONOMY_THREAT`/`STARVATION` is
+read independently by whichever module needs it. Closing that gap (a real
+`PolicyMode` enum + the `ATTACK_THRESHOLD` timing logic) is the remaining
+scope of Phase 6.
 
 ---
 

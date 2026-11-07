@@ -7,12 +7,14 @@ from types import SimpleNamespace
 from fcode import EntityType, Environment, Position
 
 import claim_manager
+import map_knowledge
 from assignment import claim_ore, clear_assignment, ore_owner, reset_ownership_registry_for_tests
 from economy import ore_claimed_by_other, scan_ore
 
 
 def setup_function() -> None:
     reset_ownership_registry_for_tests()
+    map_knowledge.reset_for_tests()
 
 
 def test_claim_registers_owner() -> None:

@@ -17,10 +17,11 @@ from economy import ore_claimed_by_other, ore_owned_by_other, scan_ore
 from geometry import builder_can_act, xy
 
 _ENABLED = os.environ.get("IDLE_AUDIT", "") == "1"
-_PATH = os.environ.get(
-    "IDLE_AUDIT_LOG",
-    os.path.join(os.path.dirname(__file__), "idle_audit.log"),
-)
+# Plain relative path — do not anchor this to the module's own file path.
+# The platform's sandboxed loader leaves that dunder undefined for bot
+# modules, and this default is evaluated eagerly at import time even when
+# audit logging is disabled.
+_PATH = os.environ.get("IDLE_AUDIT_LOG", "idle_audit.log")
 _FP = None
 
 _IDLE_ATTR = "_idle_turns"

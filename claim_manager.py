@@ -27,6 +27,13 @@ from fcode import Controller, EntityType, Environment, Position
 
 from constants import MAX_ORE_CLAIMS, SLOT_CLAIM_BASE
 from geometry import xy
+import map_knowledge
+
+# Round-scoped cache — see condition_state.py's own note on this: calling
+# ct.get_nearby_buildings()/ct.get_nearby_units() directly bypasses
+# map_knowledge's per-round cache and reintroduces the redundant
+# Controller-API calls that caused real TLE timeouts.
+get_cached_units = map_knowledge.get_cached_units
 
 # Free builders with this many consecutive free turns win contests over
 # freshly-freed builders even when slightly farther (anti-starvation).
@@ -262,7 +269,7 @@ def _contest_winner(ct: Controller, state: object, ore: Position) -> int:
     best_id = my_id
     best = sort_key(my_id, ct.get_position())
     my_team = ct.get_team()
-    for uid in ct.get_nearby_units():
+    for uid in get_cached_units(ct):
         if uid == my_id:
             continue
         try:
@@ -387,12 +394,8 @@ def begin_turn(ct: Controller, state: object) -> None:
         _write_free_or_clear(ct, my_id, int(getattr(state, "free_turns", 0)))
 
 
-def acquire(ct: Controller, state: object, ore: Position) -> AcquireResult:
-    """Atomically reserve ``ore`` or fail — cache and table updated together."""
-    reason = why_not_acquirable(ct, state, ore)
-    if reason is not None:
-        return AcquireResult(ok=False, reason=reason)
-
+def _acquire_committed(ct: Controller, state: object, ore: Position) -> AcquireResult:
+    """Contest + table write, shared by ``acquire`` and orphan adoption."""
     my_id = ct.get_id()
     winner = _contest_winner(ct, state, ore)
     if winner != my_id:
@@ -416,6 +419,14 @@ def acquire(ct: Controller, state: object, ore: Position) -> AcquireResult:
 
     state.free_turns = 0  # type: ignore[attr-defined]
     return AcquireResult(ok=True, ore=ore, reason="acquired")
+
+
+def acquire(ct: Controller, state: object, ore: Position) -> AcquireResult:
+    """Atomically reserve ``ore`` or fail — cache and table updated together."""
+    reason = why_not_acquirable(ct, state, ore)
+    if reason is not None:
+        return AcquireResult(ok=False, reason=reason)
+    return _acquire_committed(ct, state, ore)
 
 
 def release(ct: Controller, state: object, *, reason: str = "") -> None:
@@ -468,6 +479,88 @@ def visible_uncovered_ores(ct: Controller) -> list[Position]:
         except Exception:
             continue
     return out
+
+
+_CARD = ((0, -1), (1, 0), (0, 1), (-1, 0))
+
+
+def visible_orphan_harvesters(ct: Controller) -> list[Position]:
+    """Friendly harvesters with no belt tile started at all.
+
+    ``visible_uncovered_ores`` skips any ore tile with a building on it, so
+    once a belt plan fails/releases *after* the harvester was already built,
+    that tile is filtered out of claimable work forever — a real match
+    showed harvesters left permanently unlinked to Core because of exactly
+    this (2026-08-22). Reopen a harvester as claimable "finish the belt"
+    work when none of its orthogonal neighbours is a friendly
+    conveyor/splitter, i.e. no belt was ever started from it.
+    """
+    my_team = ct.get_team()
+    out: list[Position] = []
+    for tile in ct.get_nearby_tiles():
+        try:
+            if ct.get_tile_env(tile) != Environment.ORE_TITANIUM:
+                continue
+            bid = ct.get_tile_building_id(tile)
+            if bid is None:
+                continue
+            if ct.get_team(bid) != my_team:
+                continue
+            if ct.get_entity_type(bid) != EntityType.HARVESTER:
+                continue
+        except Exception:
+            continue
+        has_belt = False
+        for dx, dy in _CARD:
+            try:
+                nbid = ct.get_tile_building_id(Position(tile.x + dx, tile.y + dy))
+                if nbid is None:
+                    continue
+                if ct.get_team(nbid) != my_team:
+                    continue
+                if ct.get_entity_type(nbid) in (EntityType.CONVEYOR, EntityType.SPLITTER):
+                    has_belt = True
+                    break
+            except Exception:
+                continue
+        if not has_belt:
+            out.append(tile)
+    return out
+
+
+def try_adopt_orphan_harvester(
+    ct: Controller, state: object, *, exclude: Position | None = None
+) -> AcquireResult:
+    """Claim a friendly orphaned harvester to finish linking it to Core.
+
+    Same claim-table protocol as ore acquisition (so at most one builder
+    adopts a given tile), but skips the "occupied" rejection in
+    ``why_not_acquirable`` since the building here is our own harvester,
+    not something blocking a fresh claim. ``exclude`` lets a builder that
+    just gave up on this exact tile (see ``_fail_task``'s retry cap) skip
+    re-adopting it this call, so a genuinely unreachable harvester doesn't
+    trap a builder in an every-turn fail/re-adopt loop forever.
+    """
+    if _asn().get_assignment(state).ore_pos is not None:
+        return AcquireResult(ok=False, reason="already_owning")
+    if int(getattr(state, "claim_turns_alive", 0)) < 1:
+        return AcquireResult(ok=False, reason="spawn_turn_gate")
+
+    my_id = ct.get_id()
+    pos = ct.get_position()
+    orphans = visible_orphan_harvesters(ct)
+    if exclude is not None:
+        orphans = [t for t in orphans if (t.x, t.y) != (exclude.x, exclude.y)]
+    ranked = sorted(orphans, key=lambda t: (pos.distance_squared(t), t.x, t.y))
+    table = read_table(ct)
+    for ore in ranked:
+        oid = table.get(_ore_key(ore))
+        if oid is not None and oid != my_id and _builder_alive(ct, oid):
+            continue
+        res = _acquire_committed(ct, state, ore)
+        if res.ok:
+            return res
+    return AcquireResult(ok=False, reason="no_orphan_harvester")
 
 
 def try_acquire_work(
